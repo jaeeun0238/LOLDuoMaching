@@ -81,3 +81,9 @@ model Comments {
     post      Posts    @relation(fields: [postId], references: [postId])
     user      Users    @relation(fields: [userId], references: [userId])
 }
+
+model Chanpions {
+    chanpionId Int    @id @default(autoincrement())
+    image      String
+    name       String
+}
