@@ -42,6 +42,13 @@ router.post('/sign-up', async (req, res) => {
       .json({ message: 'password는 6자리 이하로만 설정할 수 있습니다' });
   }
 
+  // 닉네임 중복 확인
+  const isExistUserByNickname = await prisma.users.findUnique({
+    where: { nickname },
+  });
+  if (isExistUserByNickname)
+    return res.status(409).json({ errorMessage: '이미 존재하는 닉네임입니다' });
+
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // 사용자 정보를 account 테이블에 추가
@@ -63,7 +70,7 @@ router.post('/sign-up', async (req, res) => {
 router.post('/sign-in', async (req, res) => {
   // 클라이언트에서 로그인 요청 시 받은  email, password
   const { email, password } = req.body;
-  const accountData = await prisma.users.findFirst({ where: { email } });
+  const accountData = await prisma.users.findUnique({ where: { email } });
 
   if (!accountData)
     return res.status(401).json({ message: '존재하지 않는 email입니다.' });
@@ -71,25 +78,33 @@ router.post('/sign-in', async (req, res) => {
   else if (!(await bcrypt.compare(password, accountData.password)))
     return res.status(401).json({ message: '비밀번호가 일치하지 않습니다.' });
 
+  // 비밀번호를 암호화(bcrypt 사용)하여 저장.
   // 로그인에 성공하면, 사용자의 accountId를 바탕으로 토큰을 생성합니다.
-  const accesstoken = jwt.sign(
-    {
-      userId: accountData.userId,
-    },
-    // JWT를 서명하는 데 사용되는 비밀 키
-    // 서버가 비밀 키를 사용하여 토큰 변조 여부를 알 수 있다
-    process.env.SERVER_ACCESS_KEY,
-    // 엑세스 토큰
-    { expiresIn: '5m' },
-  );
+  // const accesstoken = jwt.sign(
+  //   {
+  //     userId: accountData.userId,
+  //   },
+  //   // JWT를 서명하는 데 사용되는 비밀 키
+  //   // 서버가 비밀 키를 사용하여 토큰 변조 여부를 알 수 있다
+  //   process.env.SERVER_ACCESS_KEY,
+  //   // 엑세스 토큰
+  //   { expiresIn: '5m' },
+  // );
 
-  res.setHeader('Authorization', `Bearer ${accesstoken}`);
-
+  res.cookie('userId', accountData.userId, {
+    httpOnly: true, // XSS 공격 방지
+    secure: process.env.NODE_ENV === 'production', // HTTPS에서만 전송 (배포 환경에서만 적용)
+    maxAge: 5 * 60 * 1000, // 쿠키 만료 시간 설정 (5분)
+  });
   return res.status(200).json({
     message: '로그인 성공',
-    accessToken: accesstoken,
     email: accountData.email,
   });
 });
 
+// 로그아웃
+router.post('/sign-out', (req, res) => {
+  res.clearCookie('userId'); // 쿠키 삭제
+  return res.status(200).json({ message: '로그아웃 성공' });
+});
 export default router;
