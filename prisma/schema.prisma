@@ -1,83 +1,102 @@
-// schema.prisma
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mysql" // 데이터베이스에 맞게 변경 (예: postgresql)
-    url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model Users {
-    userId              Int         @id @default(autoincrement())
-    email               String      @unique
-    password            String
-    userName            String
-    nickname            String      @unique
-    createdAt           DateTime    @default(now())
-    profiles            Profiles[] // 1:N 관계로 변경
-    posts               Posts[]
-    chatRooms           ChatRoom[]
-    duoReviewsAsMyUser  DuoReview[] @relation("MyUserDuoReviews")
-    duoReviewsAsSomeone DuoReview[] @relation("SomeoneUserDuoReviews")
-    comments            Comments[]
+  userId              Int         @id @default(autoincrement())
+  email               String      @unique
+  password            String
+  userName            String
+  nickname            String      @unique
+  createdAt           DateTime    @default(now())
+  chatRooms           ChatRoom[]
+  comments            Comments[]
+  duoReviewsAsMyUser  DuoReview[] @relation("MyUserDuoReviews")
+  duoReviewsAsSomeone DuoReview[] @relation("SomeoneUserDuoReviews")
+  posts               Posts[]
+  profiles            Profiles[]
 }
 
 model Posts {
-    postId      Int        @id @default(autoincrement()) // Primary Key
-    profileId   Int // Unique 제약 조건 제거
-    title       String
-    like        Int        @default(0) // 기본값 0
-    content     String
-    createdAt   DateTime   @default(now())
-    updatedAt   DateTime   @updatedAt
-    profile     Profiles   @relation(fields: [profileId], references: [profileId]) // Foreign Key
-    comments    Comments[] // 1:N 관계
-    Users       Users?     @relation(fields: [usersUserId], references: [userId])
-    usersUserId Int?
+  postId      Int        @id @default(autoincrement())
+  profileId   Int
+  title       String
+  like        Int        @default(0)
+  content     String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  usersUserId Int?
+  comments    Comments[]
+  profile     Profiles   @relation(fields: [profileId], references: [profileId])
+  Users       Users?     @relation(fields: [usersUserId], references: [userId])
+
+  @@index([profileId], map: "Posts_profileId_fkey")
+  @@index([usersUserId], map: "Posts_usersUserId_fkey")
 }
 
 model Profiles {
-    profileId     Int        @id @default(autoincrement())
-    userId        Int // 외래키
-    lolNickname   String
-    tier          String
-    line          String
-    mostPlay      String
-    averageRating Int        @default(0)
-    user          Users      @relation(fields: [userId], references: [userId])
-    posts         Posts[]
-    ChatRoom      ChatRoom[]
+  profileId     Int        @id @default(autoincrement())
+  userId        Int
+  lolNickname   String
+  tier          String
+  line          String
+  mostPlay      String
+  averageRating Int        @default(0)
+  ChatRoom      ChatRoom[]
+  posts         Posts[]
+  user          Users      @relation(fields: [userId], references: [userId])
+
+  @@index([userId], map: "Profiles_userId_fkey")
 }
 
 model ChatRoom {
-    chatRoomId Int      @id @default(autoincrement())
-    userId     Int
-    profileId  Int
-    content    String
-    createdAt  DateTime @default(now())
-    user       Users    @relation(fields: [userId], references: [userId])
-    profile    Profiles @relation(fields: [profileId], references: [profileId])
+  chatRoomId Int      @id @default(autoincrement())
+  userId     Int
+  profileId  Int
+  content    String
+  createdAt  DateTime @default(now())
+  profile    Profiles @relation(fields: [profileId], references: [profileId])
+  user       Users    @relation(fields: [userId], references: [userId])
+
+  @@index([profileId], map: "ChatRoom_profileId_fkey")
+  @@index([userId], map: "ChatRoom_userId_fkey")
 }
 
 model DuoReview {
-    duoReviewId   Int      @id @default(autoincrement())
-    myUserId      Int
-    someoneUserId Int
-    content       String
-    starRating    Int
-    createdAt     DateTime @default(now()) // 변경
-    myUser        Users    @relation("MyUserDuoReviews", fields: [myUserId], references: [userId])
-    someoneUser   Users    @relation("SomeoneUserDuoReviews", fields: [someoneUserId], references: [userId])
+  duoReviewId   Int      @id @default(autoincrement())
+  myUserId      Int
+  someoneUserId Int
+  content       String
+  starRating    Int
+  createdAt     DateTime @default(now())
+  myUser        Users    @relation("MyUserDuoReviews", fields: [myUserId], references: [userId])
+  someoneUser   Users    @relation("SomeoneUserDuoReviews", fields: [someoneUserId], references: [userId])
+
+  @@index([myUserId], map: "DuoReview_myUserId_fkey")
+  @@index([someoneUserId], map: "DuoReview_someoneUserId_fkey")
 }
 
 model Comments {
-    commentId Int      @id @default(autoincrement())
-    postId    Int
-    userId    Int
-    content   String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    post      Posts    @relation(fields: [postId], references: [postId])
-    user      Users    @relation(fields: [userId], references: [userId])
+  commentId Int      @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  post      Posts    @relation(fields: [postId], references: [postId])
+  user      Users    @relation(fields: [userId], references: [userId])
+
+  @@index([postId], map: "Comments_postId_fkey")
+  @@index([userId], map: "Comments_userId_fkey")
+}
+
+model Champions {
+  chanpionId Int    @id @default(autoincrement())
+  image      String
+  name       String
 }
