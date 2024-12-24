@@ -33,6 +33,7 @@ model Profiles {
     userId        BigInt  @unique // 사용자 ID, 고유 값
     championId    BigInt // 챔피언 ID
     lolNickname   String // 롤 닉네임
+    profileImage  String
     tier          String // 티어 정보
     line          String // 선호 라인
     mostPlay1     String // 가장 많이 플레이한 챔피언 1
@@ -48,6 +49,7 @@ model Posts {
     postId    Int        @id @default(autoincrement()) // 게시글 ID, 자동 증가
     profileId Int        @unique // 프로필 ID, 고유 값
     title     String // 게시글 제목
+    postImage String
     likeCount Int // 좋아요 수
     content   String // 게시글 내용
     createdAt DateTime   @default(now()) // 생성 날짜
