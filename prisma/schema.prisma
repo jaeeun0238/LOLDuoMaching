@@ -82,8 +82,8 @@ model Comments {
     user      Users    @relation(fields: [userId], references: [userId])
 }
 
-model Chanpions {
-    chanpionId Int    @id @default(autoincrement())
+model Champions {
+    championId Int    @id @default(autoincrement())
     image      String
     name       String
 }
