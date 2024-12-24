@@ -12,7 +12,7 @@ championRoutes.get('/champions', async (req, res) => {
     const gstChampions = await prisma.champions.findMany({
       select: { name: true, image: true },
     });
-    if (!gstChampions || gstChampions.length) {
+    if (!gstChampions || gstChampions.length === 0) {
       return res
         .status(404)
         .json({ success: false, message: '저장된 챔피언이 없습니다' });
