@@ -13,15 +13,11 @@ championRoutes.get('/champions', async (req, res) => {
       select: { name: true, image: true },
     });
     if (!gstChampions || gstChampions.length === 0) {
-      return res
-        .status(404)
-        .json({ success: false, message: '저장된 챔피언이 없습니다' });
+      return res.status(404).json({ errorMessage: '저장된 챔피언이 없습니다' });
     }
     res.status(200).json({ success: true, message: gstChampions });
   } catch (error) {
-    res
-      .status(500)
-      .json({ success: false, message: `서버 에러: ${error.message}` });
+    res.status(500).json({ errorMessage: `서버 에러: ${error.message}` });
   }
 });
 
@@ -34,9 +30,7 @@ championRoutes.post('/update_champion_list', async (req, res) => {
   //const { version } = req.params;
   const { version } = req.body;
   if (!version) {
-    return res
-      .status(400)
-      .json({ success: false, message: '버전이 필요합니다' });
+    return res.status(400).json({ errorMessage: '버전이 필요합니다' });
   }
   try {
     // Riot API 정보
@@ -47,8 +41,7 @@ championRoutes.post('/update_champion_list', async (req, res) => {
     const champions = data.data;
     if (!champions) {
       return res.status(404).json({
-        success: false,
-        message: 'Riot API에서 챔피언 데이터를 가져오지 못했습니다',
+        errorMessage: 'Riot API에서 챔피언 데이터를 가져오지 못했습니다',
       });
     }
 
@@ -74,7 +67,7 @@ championRoutes.post('/update_champion_list', async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ errorMessage: error.message });
   }
 });
 
