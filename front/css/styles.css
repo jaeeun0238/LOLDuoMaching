@@ -40,6 +40,49 @@ h2 {
   color: #6c757d;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  margin: 0 10px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.search-bar input {
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.search-bar button {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  background-color: #e0e0e0;
+  cursor: pointer;
+  border-radius: 3px;
+}
 .header-container2 {
   display: flex; /* Flexbox 사용 */
   /*justify-content: space-between; */ /* 요소 간 간격 설정 */
@@ -66,6 +109,7 @@ h2 {
   color: white; /* 글씨 색을 흰색으로 설정 */
 }
 
+/** posts **/
 .container {
   /*display: flex;*/ /* Flexbox 사용 */
   justify-content: flex-start;
@@ -108,9 +152,17 @@ h2 {
   gap: 20px;
 }
 
+/** 자담방 **/
 .free-bord{
-  display: flex; /* Flexbox 활성화 */
-  gap: 10px; /* 간격 조정 */
+
+   position: fixed; /* 스크롤해도 화면에서 고정된 위치 */
+    top: 80%;        /* 세로로 중앙 정렬 */
+    width: 100%;
+    right: 0;        /* 오른쪽 끝에 붙이기 */
+    transform: translateY(-50%); /* 세로 중앙 정렬 조정 */
+  
+  /*display: flex;*//* Flexbox 활성화 */
+  /*gap: 10px;*/ /* 간격 조정 */
 }
 
 #contentBox{ display: flex;
@@ -120,10 +172,104 @@ h2 {
   margin: 1px;   
   right: 0;
 }
-
+/*
 .free-slider {
   max-height: 50%;
   overflow-y: scroll;
   padding: 10px;
+  border: 1px solid #ccc; 
+}
+*/
+/** post **/
+.comment-feed {
+  flex-grow: 1; /* 남은 공간을 모두 차지 */
+  
+}
+
+.new-feed {
+  width: 20%; /* 고정 너비 */
+ /* background-color: lightgreen;*/ /* 확인용 배경색 */
+}
+
+.comment-bord{
+  display: flex; /* Flexbox 활성화 */
+  gap: 10px; /* 간격 조정 */
+}
+.comment-slider {
+  max-height: 200px;
+  overflow-y: scroll;
+  padding: 10px;
   border: 1px solid #ccc;  /* 경계선 색상을 지정해야 합니다 */
+}
+
+.card-body {
+  padding-left: 10px; /* 이미지와 텍스트 간의 여백 추가 */
+}
+
+.post{
+  width: 100%;
+ 
+}
+
+
+
+#enterChat{
+
+  float: right; /* 버튼을 줄의 오른쪽 끝에 배치 */
+  margin-left: auto; /* 필요 시 다른 요소와 간격 확보 */
+
+}
+
+.profile-card {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 2px solid black; /* 테두리 */
+  background-image: url('./lolL.png'); /* 배경 이미지 */
+  background-size: cover; /* 배경 크기 */
+  background-position: center; /* 배경 위치 */
+  background-repeat: no-repeat; /* 반복 없음 */
+  position: relative; /* 오버레이를 위한 위치 설정 */
+  
+  width: 500px;
+  padding: 20px;
+  color: #fff; /* 텍스트 색상 */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* 텍스트 가독성을 위한 그림자 */
+}
+
+/* 반투명 오버레이 */
+.profile-card::before {
+  content: ''; /* 빈 가상 요소 */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.5); /* 검정 반투명 배경 */
+  z-index: 1; /* 카드 내용보다 뒤로 */
+}
+
+/* 카드 내용 */
+.card-content {
+  position: relative; /* 오버레이 위에 배치 */
+  z-index: 2; /* 오버레이보다 앞으로 */
+
+}
+
+.profile-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 3%;
+  display: block;
+  margin: 0 0 10px 0;
+}
+
+.lol-nickname {
+  color: #fff; /* 텍스트 색상 */
+  font-size: 1.5em;
+}
+
+.profile-info {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
