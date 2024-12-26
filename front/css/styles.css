@@ -258,8 +258,11 @@ h2 {
 }
 
 .profile-img {
-  width: 100px;
-  height: 100px;
+  
+  background-color: white;
+  padding: 3px;
+  width: 150px;
+  height: auto;
   border-radius: 3%;
   display: block;
   margin: 0 0 10px 0;
@@ -393,14 +396,21 @@ button:hover {
 }
 
 .row-champion-img{
-  background-color: #1cf038;
   margin-top: 10px;
   display: flex; /* Flexbox 활성화 */
   align-items: center; /* 요소를 세로 중앙 정렬 */
   gap: 10px; /* 간격 조정 */
 }
 .champion-img{
+  background-color: white;
+  padding: 3px;
   margin: 5px;
   width: 300px;
   height: auto;
+}
+
+/** 회원정보, 프로필정보 수정**/
+.edit-form{
+  margin-top: 50px;
+  margin-bottom: 50px;
 }

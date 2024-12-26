@@ -1,0 +1,138 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.chat-container {
+  width: 400px;
+  height: 600px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.bag-img {
+  background-image: url('./L.png');
+  background-size: 30%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.chat-box {
+  background-color: rgba(205, 229, 250, 0.692);
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  position: relative;
+}
+
+#log {
+  padding: 0 10px 10px;
+}
+
+#log > div {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.broadcaster,
+.moderator {
+  align-items: flex-start;
+}
+
+.moderator {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.profileYou {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.profileMe {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+
+.message {
+  position: relative;
+  display: inline-block;
+  background: #fff;
+  color: #000;
+  border-radius: 0.4em;
+  padding: 10px;
+}
+
+.meta {
+  font-size: 0.9em;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+/* 말풍선 꼬리 */
+.tail {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.tail.left {
+  border-width: 10px 10px 10px 0;
+  border-color: transparent #fff transparent transparent;
+  left: -10px;
+  top: 10px;
+}
+
+.tail.right {
+  border-width: 10px 0 10px 10px;
+  border-color: transparent transparent transparent #fff;
+  right: -10px;
+  top: 10px;
+}
+
+.input-container {
+  background-color: rgba(249, 250, 205, 0.692);
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+}
+
+#chat-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#send-btn {
+  margin-left: 10px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#send-btn:hover {
+  background-color: #0056b3;
+}
