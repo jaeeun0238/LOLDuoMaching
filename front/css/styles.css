@@ -209,7 +209,7 @@ h2 {
 
 .post{
   width: 100%;
- 
+  
 }
 
 
@@ -222,15 +222,14 @@ h2 {
 }
 
 .profile-card {
-  margin-top: 20px;
+  margin-top: 50px;
   margin-bottom: 20px;
-  border: 2px solid black; /* 테두리 */
+  border: 2px solid rgba(0, 0, 0, 0.61); /* 테두리 */
   background-image: url('./lolL.png'); /* 배경 이미지 */
   background-size: cover; /* 배경 크기 */
   background-position: center; /* 배경 위치 */
   background-repeat: no-repeat; /* 반복 없음 */
   position: relative; /* 오버레이를 위한 위치 설정 */
-  
   width: 500px;
   padding: 20px;
   color: #fff; /* 텍스트 색상 */
@@ -256,14 +255,12 @@ h2 {
   z-index: 2; /* 오버레이보다 앞으로 */
 
 }
-
-.profile-img {
-  
+.profile-img {  
   background-color: white;
   padding: 3px;
   width: 150px;
   height: auto;
-  border-radius: 3%;
+  border-radius: 5%;
   display: block;
   margin: 0 0 10px 0;
 }
@@ -365,16 +362,19 @@ button:hover {
 .profile {
   margin-top: 50px;
   margin-bottom: 20px;
-  border: 2px solid black; /* 테두리 */
+  border: 2px solid rgba(0, 0, 0, 0.705); /* 테두리 */
   background-image: url('./lolL.png'); /* 배경 이미지 */
   background-size: cover; /* 배경 크기 */
   background-position: center; /* 배경 위치 */
   background-repeat: no-repeat; /* 반복 없음 */
   position: relative; /* 오버레이를 위한 위치 설정 */
-  
-  padding: 20px;
+  width: 950px;
   color: #fff; /* 텍스트 색상 */
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* 텍스트 가독성을 위한 그림자 */
+}
+.card-content{
+  background-color: #0000005b;
+  padding: 10px;
 }
 .review{
   margin-left: 100px;
@@ -401,12 +401,17 @@ button:hover {
   align-items: center; /* 요소를 세로 중앙 정렬 */
   gap: 10px; /* 간격 조정 */
 }
+
 .champion-img{
   background-color: white;
   padding: 3px;
+  border-radius: 5%;
   margin: 5px;
   width: 300px;
   height: auto;
+}
+.chamImg{
+  border-radius: 5%;
 }
 
 /** 회원정보, 프로필정보 수정**/
