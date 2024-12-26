@@ -15,11 +15,11 @@ export default async function (req, res, next) {
     if (tokenType !== 'Bearer')
       throw new Error('토큰 타입이 일치하지 않습니다.');
     // 토큰 검증
-    const decodedToken = jwt.verify(token, process.env.JWT_KEY); //env 파일에있음
-    const userPID = decodedToken.userPID;
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET); //env 파일에있음
+    const userId = decodedToken.userId;
     // 사용자 조회
     const user = await prisma.userData.findUnique({
-      where: { userPID: userPID },
+      where: { userId: userId },
     });
     if (!user) {
       res.clearCookie('authorization');
