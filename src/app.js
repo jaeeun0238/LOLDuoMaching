@@ -1,11 +1,10 @@
 import express from 'express';
-import { createServer } from 'http';
+import userRouter from './routers/user.router.js';
+import errorMiddleware from './middlewares/error.middleware.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
-
 const app = express();
-
 const PORT = 3000;
 
 app.use(express.json());
