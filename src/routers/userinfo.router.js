@@ -11,8 +11,8 @@ const router = express.Router();
 // Prisma Client 인스턴스 생성 (데이터베이스와 상호작용)
 const prisma = new PrismaClient();
 
-// Riot API 키를 환경 변수에서 가져옴
-const RIOT_API_KEY = process.env.RIOT_API_KEY;
+// Riot API 키를 가져옴
+const RIOT_API_KEY = 'RGAPI-736bb5d3-40e4-4459-91cb-e92393b28e69';
 
 // Riot API 데이터 캐싱을 위한 객체와 캐싱 유효 시간(TTL) 설정
 const riotDataCache = {}; // 캐싱된 데이터를 저장하는 객체
@@ -80,28 +80,53 @@ router.get('/user/:userId', async (req, res) => {
   const { userId } = req.params; // 요청 경로에서 userId 추출
 
   try {
+    console.log(`요청된 userId: ${userId}`); // 요청받은 userId 출력
     // 데이터베이스에서 해당 userId를 가진 사용자 정보 검색
     const user = await prisma.users.findUnique({
       where: { userId: parseInt(userId) }, // userId를 정수로 변환하여 검색
       include: {
-        profiles: true, // 사용자 프로필 정보 포함
-        posts: true, // 사용자 게시물 정보 포함
-        comments: true, // 사용자 댓글 정보 포함
+        profiles: {
+          select: {
+            lolNickname: true, // 롤 닉네임
+            tier: true, // 티어 정보
+            line: true, // 선호 라인
+            mostPlay1: true, // 가장 많이 플레이한 챔피언 1
+            mostPlay2: true, // 가장 많이 플레이한 챔피언 2
+            mostPlay3: true, // 가장 많이 플레이한 챔피언 3
+            averageRating: true, // 평균 평가 점수
+          },
+        },
+        posts: true, // 사용자 게시글 포함
+        comments: true, // 사용자 댓글 포함
       },
     });
 
     // 사용자가 데이터베이스에 없으면 404 상태 코드와 메시지 반환
     if (!user) {
+      console.log(`유저를 찾을 수 없습니다: userId=${userId}`);
       return res.status(404).json({ error: '유저를 찾을 수 없습니다.' });
     }
 
-    // Riot API를 호출하여 프로필의 lolNickname 기반으로 소환사 정보 가져오기
-    const riotDataPromises = user.profiles.map(
-      (profile) => fetchRiotData(profile.lolNickname), // fetchRiotData 함수 호출
-    );
+    console.log(`DB에서 찾은 유저 정보:`, user); // 유저 데이터 확인
 
-    // 모든 프로필의 Riot API 데이터 요청이 완료될 때까지 대기
+    // Riot API를 호출하여 각 프로필에 대한 추가 데이터를 가져옴
+    const riotDataPromises = user.profiles.map(async (profile) => {
+      // 각 프로필의 lolNickname으로 Riot API 호출
+      const riotData = await fetchRiotData(profile.lolNickname);
+
+      return {
+        lolNickname: profile.lolNickname,
+        mostPlay1: profile.mostPlay1,
+        mostPlay2: profile.mostPlay2,
+        mostPlay3: profile.mostPlay3,
+        riotInfo: riotData, // Riot API에서 가져온 추가 데이터
+      };
+    });
+
+    // 모든 Riot API 요청이 완료될 때까지 대기
     const riotData = await Promise.all(riotDataPromises);
+
+    console.log(`Riot API에서 받은 데이터:`, riotData); // Riot API 데이터 확인
 
     // 사용자 정보와 Riot API 데이터를 JSON 형식으로 클라이언트에 반환
     res.json({

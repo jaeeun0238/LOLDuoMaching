@@ -5,7 +5,7 @@ generator client {
 
 // 데이터베이스 연결 설정
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
