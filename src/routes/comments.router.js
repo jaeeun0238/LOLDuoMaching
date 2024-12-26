@@ -6,14 +6,14 @@ const router = express.Router();
 // 댓글 생성
 router.post('/posts/:postId/comments', async (req, res, next) => {
   const { postId } = req.params; // URL에서 게시글 ID 가져오기
-  const { userId } = req.user; // 로그인된 사용자의 ID 가져오기 (authMiddleware에서 제공)
+  const { userId } = req.body; // 요청에서 사용자 ID 가져오기
   const { content } = req.body; // 댓글 내용 가져오기
 
   try {
     // 게시글 존재 여부 확인
     const post = await prisma.posts.findUnique({
       where: {
-        postId: +postId, // postId를 숫자로 변환
+        postId: parseInt(postId, 10), // postId를 숫자로 변환
       },
     });
 
@@ -24,8 +24,8 @@ router.post('/posts/:postId/comments', async (req, res, next) => {
     // 댓글 생성
     const comment = await prisma.comments.create({
       data: {
-        userId: +userId, // 댓글 작성자 ID
-        postId: +postId, // 댓글 작성 게시글 ID
+        userId: userId, // 댓글 작성자 ID
+        postId: parseInt(postId, 10), // 댓글 작성 게시글 ID
         content: content,
       },
     });
@@ -50,7 +50,7 @@ router.get('/posts/:postId/comments', async (req, res, next) => {
     // 게시글 존재 여부 확인
     const post = await prisma.posts.findUnique({
       where: {
-        postId: +postId, // postId를 숫자로 변환
+        postId: parseInt(postId, 10), // postId를 숫자로 변환
       },
     });
 
@@ -61,7 +61,15 @@ router.get('/posts/:postId/comments', async (req, res, next) => {
     // 댓글 조회
     const comments = await prisma.comments.findMany({
       where: {
-        postId: +postId, // postId를 기준으로 댓글 필터링
+        postId: parseInt(postId, 10), // postId를 기준으로 댓글 필터링
+      },
+      include: {
+        user: {
+          select: {
+            userName: true, // 사용자 이름 포함
+            nickname: true, // 사용자 닉네임 포함
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc', // 최신순 정렬
@@ -83,13 +91,13 @@ router.get('/posts/:postId/comments', async (req, res, next) => {
 // 댓글 삭제
 router.delete('/posts/:postId/comments/:commentId', async (req, res, next) => {
   const { postId, commentId } = req.params;
-  const { userId } = req.user; // 요청한 사용자의 ID를 확인 (작성자 본인 확인용)
+  const { userId } = req.body; // 요청에서 사용자 ID 가져오기
 
   try {
     // 게시글 존재 여부 확인
     const post = await prisma.posts.findUnique({
       where: {
-        postId: +postId,
+        postId: parseInt(postId, 10),
       },
     });
 
@@ -100,7 +108,7 @@ router.delete('/posts/:postId/comments/:commentId', async (req, res, next) => {
     // 댓글 존재 여부 및 작성자 확인
     const comment = await prisma.comments.findUnique({
       where: {
-        commentId: +commentId,
+        commentId: parseInt(commentId, 10),
       },
     });
 
@@ -109,14 +117,14 @@ router.delete('/posts/:postId/comments/:commentId', async (req, res, next) => {
     }
 
     // 댓글 작성자가 맞는지 확인
-    if (comment.userId !== +userId) {
+    if (comment.userId !== BigInt(userId)) {
       return res.status(403).json({ message: '댓글 삭제 권한이 없습니다.' });
     }
 
     // 댓글 삭제
     await prisma.comments.delete({
       where: {
-        commentId: +commentId,
+        commentId: parseInt(commentId, 10),
       },
     });
 

@@ -10,9 +10,12 @@ router.post('/profiles', async (req, res, next) => {
       lolNickname,
       tier,
       line,
-      mostPlay,
+      mostPlay1,
+      mostPlay2, // 추가된 필드
+      mostPlay3, // 추가된 필드
       averageRating,
-      userId, // 이미 존재하는 사용자 ID를 기반으로 프로필을 생성
+      championId,
+      userId,
       email,
       password,
       userName,
@@ -21,42 +24,34 @@ router.post('/profiles', async (req, res, next) => {
 
     // 1. 사용자가 이미 존재하는지 확인하고 없으면 새로 생성
     let user = await prisma.users.findUnique({
-      where: {
-        email: email, // 이메일로 기존 사용자를 찾습니다
-      },
+      where: { email },
     });
 
     if (!user) {
       // 사용자가 없으면 새로운 사용자 생성
       user = await prisma.users.create({
-        data: {
-          email: email,
-          password: password,
-          userName: userName,
-          nickname: nickname,
-        },
+        data: { email, password, userName, nickname },
       });
     }
 
-    // 2. 사용자가 존재하거나 새로 생성된 후, 프로필 생성
+    // 2. 프로필 생성
     const profile = await prisma.profiles.create({
       data: {
-        lolNickname: lolNickname,
-        tier: tier,
-        line: line,
-        mostPlay: mostPlay,
-        averageRating: averageRating,
-        user: {
-          connect: {
-            userId: user.userId, // 이미 존재하는 사용자 ID와 연결
-          },
-        },
+        lolNickname,
+        tier,
+        line,
+        mostPlay1,
+        mostPlay2,
+        mostPlay3,
+        averageRating,
+        championId,
+        user: { connect: { userId: user.userId } },
       },
     });
 
     return res
       .status(201)
-      .json({ message: '프로필이 생성됐습니다.', data: profile });
+      .json({ message: '프로필이 생성되었습니다.', data: profile });
   } catch (error) {
     next(error); // 에러를 다음 핸들러로 전달
   }
@@ -65,45 +60,52 @@ router.post('/profiles', async (req, res, next) => {
 // 프로필 수정
 router.patch('/profiles/:profileId', async (req, res, next) => {
   try {
-    const { profileId } = req.params; // URL에서 profileId를 가져옵니다.
-    const { lolNickname, tier, line, mostPlay, averageRating } = req.body;
+    const { profileId } = req.params;
+    const {
+      lolNickname,
+      tier,
+      line,
+      mostPlay1,
+      mostPlay2,
+      mostPlay3,
+      averageRating,
+      championId,
+    } = req.body;
 
-    // profileId를 숫자로 변환
     const parsedProfileId = parseInt(profileId, 10);
 
-    // 프로필 업데이트
     const updatedProfile = await prisma.profiles.update({
-      where: { profileId: parsedProfileId }, // 숫자로 변환된 profileId로 프로필을 찾습니다.
+      where: { profileId: parsedProfileId },
       data: {
-        ...(lolNickname && { lolNickname }), // 전달된 데이터만 업데이트
+        ...(lolNickname && { lolNickname }),
         ...(tier && { tier }),
         ...(line && { line }),
-        ...(mostPlay && { mostPlay }),
-        ...(averageRating !== undefined && { averageRating }), // averageRating이 undefined가 아닐 경우만 업데이트
+        ...(mostPlay1 && { mostPlay1 }),
+        ...(mostPlay2 && { mostPlay2 }),
+        ...(mostPlay3 && { mostPlay3 }),
+        ...(averageRating !== undefined && { averageRating }),
+        ...(championId !== undefined && { championId }),
       },
     });
 
     return res
       .status(200)
-      .json({ message: '프로필이 수정됐습니다.', data: updatedProfile });
+      .json({ message: '프로필이 수정되었습니다.', data: updatedProfile });
   } catch (error) {
     if (error.code === 'P2025') {
-      // Prisma에서 리소스가 없을 때 발생하는 에러 처리
       return res.status(404).json({ message: '프로필을 찾을 수 없습니다.' });
     }
-    next(error); // 다른 에러는 다음 핸들러로 전달
+    next(error);
   }
 });
 
 // 프로필 삭제
 router.delete('/profiles/:profileId', async (req, res, next) => {
   try {
-    const { profileId } = req.params; // URL에서 profileId를 가져옵니다.
+    const { profileId } = req.params;
 
-    // profileId를 숫자로 변환
     const parsedProfileId = parseInt(profileId, 10);
 
-    // 프로필 존재 여부 확인
     const profile = await prisma.profiles.findUnique({
       where: { profileId: parsedProfileId },
     });
@@ -112,7 +114,6 @@ router.delete('/profiles/:profileId', async (req, res, next) => {
       return res.status(404).json({ message: '프로필을 찾을 수 없습니다.' });
     }
 
-    // 프로필 삭제
     await prisma.profiles.delete({
       where: { profileId: parsedProfileId },
     });

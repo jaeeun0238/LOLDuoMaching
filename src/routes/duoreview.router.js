@@ -9,11 +9,11 @@ router.post('/duoreviews', async (req, res, next) => {
 
   try {
     // 두 사용자 존재 여부 확인
-    const myUser = await prisma.users.findUnique({
+    const myUser = await prisma.user.findUnique({
       where: { userId: myUserId },
     });
 
-    const someoneUser = await prisma.users.findUnique({
+    const someoneUser = await prisma.user.findUnique({
       where: { userId: someoneUserId },
     });
 
@@ -45,7 +45,7 @@ router.post('/duoreviews', async (req, res, next) => {
   }
 });
 
-// DuoReview 수정
+// 듀오 리뷰 수정
 router.patch('/duoreviews/:duoReviewId', async (req, res, next) => {
   const { duoReviewId } = req.params;
   const { userId } = req.user; // 요청한 사용자의 ID (authMiddleware로 설정)
@@ -54,9 +54,7 @@ router.patch('/duoreviews/:duoReviewId', async (req, res, next) => {
   try {
     // DuoReview 존재 여부 및 작성자 확인
     const duoReview = await prisma.duoReview.findUnique({
-      where: {
-        duoReviewId: duoReviewId, // duoReviewId를 숫자로 변환
-      },
+      where: { duoReviewId: parseInt(duoReviewId, 10) },
     });
 
     if (!duoReview) {
@@ -73,12 +71,10 @@ router.patch('/duoreviews/:duoReviewId', async (req, res, next) => {
 
     // DuoReview 업데이트
     const updatedDuoReview = await prisma.duoReview.update({
-      where: {
-        duoReviewId: duoReviewId,
-      },
+      where: { duoReviewId: parseInt(duoReviewId, 10) },
       data: {
-        ...(content && { content }), // content가 제공되었을 경우만 업데이트
-        ...(starRating !== undefined && { starRating }), // starRating이 제공되었을 경우만 업데이트
+        ...(content && { content }),
+        ...(starRating !== undefined && { starRating }),
       },
     });
 
@@ -94,7 +90,7 @@ router.patch('/duoreviews/:duoReviewId', async (req, res, next) => {
   }
 });
 
-// DuoReview 삭제
+// 듀오 리뷰 삭제
 router.delete('/duoreviews/:duoReviewId', async (req, res, next) => {
   const { duoReviewId } = req.params;
   const { userId } = req.user; // 요청한 사용자의 ID (authMiddleware에서 제공)
@@ -102,9 +98,7 @@ router.delete('/duoreviews/:duoReviewId', async (req, res, next) => {
   try {
     // DuoReview 존재 여부 확인
     const duoReview = await prisma.duoReview.findUnique({
-      where: {
-        duoReviewId: duoReviewId, // duoReviewId를 숫자로 변환
-      },
+      where: { duoReviewId: parseInt(duoReviewId, 10) },
     });
 
     if (!duoReview) {
@@ -122,9 +116,7 @@ router.delete('/duoreviews/:duoReviewId', async (req, res, next) => {
 
     // DuoReview 삭제
     await prisma.duoReview.delete({
-      where: {
-        duoReviewId: duoReviewId,
-      },
+      where: { duoReviewId: parseInt(duoReviewId, 10) },
     });
 
     return res.status(200).json({ message: 'DuoReview가 삭제되었습니다.' });
