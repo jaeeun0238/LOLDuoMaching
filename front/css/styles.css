@@ -21,7 +21,6 @@
 }
 
 
-
 .header-item {
   flex: 1; /* 아이템의 동일한 비율 분배 */
   text-align: center; /* 텍스트 가운데 정렬 */
@@ -272,4 +271,62 @@ h2 {
   list-style: none;
   padding: 0;
   margin: 0;
+}
+
+/** Login / Sign Up**/
+/* 로그인 컨테이너 */
+.login-sinup-container {
+  display: flex; /* 수정된 부분 */
+  flex-direction: column; /* 수정된 부분 */
+  justify-content: center; /* 수정된 부분 */
+  align-items: center; /* 수정된 부분 */
+  border-radius: 20px;
+  background-color: #67bfe270;
+  width: 400px; /* 너비를 조정 */
+  padding:  20px 0px 0px 10px ;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 40px auto 0px auto; /* 헤더와 간격을 주기 위해 추가 */
+}
+
+.input-group {
+  margin-bottom: 15px;
+  width: 100%; /* 컨테이너에 맞게 너비 설정 */
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  width: calc(100% - 20px); /* 패딩을 제외한 너비 설정 */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.center-button-container {
+  display: flex;
+  justify-content: center;
+}
+.center-button {
+  padding: 10px;
+  background-color: #67bfe2;
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #67bfe270;
+}
+
+#message {
+  margin-top: 10px;
+  color: red;
+}
+
+#login-sinup-Form {
+  width: 100%; /* 전체 너비 사용 */
 }
