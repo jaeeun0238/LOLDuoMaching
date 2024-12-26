@@ -154,34 +154,33 @@ h2 {
   gap: 20px;
 }
 
-/** 자담방 **/
+/** 잡담방 **/
 .free-bord{
-
+  border-radius: 10px; /* 모서리를 둥글게 설정 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #b0f0f894;
+  padding: 5px;
    position: fixed; /* 스크롤해도 화면에서 고정된 위치 */
-    top: 80%;        /* 세로로 중앙 정렬 */
-    width: 100%;
-    right: 0;        /* 오른쪽 끝에 붙이기 */
+            /* 세로로 중앙 정렬 */
+    bottom: 5%;
+           /* 오른쪽 끝에 붙이기 */
     transform: translateY(-50%); /* 세로 중앙 정렬 조정 */
   
-  /*display: flex;*//* Flexbox 활성화 */
+  display: flex;/* Flexbox 활성화 */
   /*gap: 10px;*/ /* 간격 조정 */
 }
 
 #contentBox{ display: flex;
+  border-radius: 10px; /* 모서리를 둥글게 설정 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   flex-grow: 1; /* 남은 공간을 모두 차지 */
 }
 #saveButton{ display: flex;
-  margin: 1px;   
+  background-color: #1cf0388c;
+  margin: 3px;   
   right: 0;
 }
-/*
-.free-slider {
-  max-height: 50%;
-  overflow-y: scroll;
-  padding: 10px;
-  border: 1px solid #ccc; 
-}
-*/
+
 /** post **/
 .comment-feed {
   flex-grow: 1; /* 남은 공간을 모두 차지 */
@@ -237,6 +236,7 @@ h2 {
   color: #fff; /* 텍스트 색상 */
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* 텍스트 가독성을 위한 그림자 */
 }
+
 
 /* 반투명 오버레이 */
 .profile-card::before {
@@ -340,4 +340,67 @@ button:hover {
 
 #login-sinup-Form {
   width: 100%; /* 전체 너비 사용 */
+}
+
+/** 프로필 **/
+.row-star {
+  margin-top: 10px;
+  margin-left: 20px;
+  display: flex; /* Flexbox 활성화 */
+  align-items: center; /* 요소를 세로 중앙 정렬 */
+  gap: 10px; /* 간격 조정 */
+}
+
+.row-star h5 {
+  margin: 0; /* 기본 여백 제거 */
+}
+
+.row-star img {
+  height: 1em; /* 텍스트 높이에 맞춤 */
+}
+
+.profile {
+  margin-top: 50px;
+  margin-bottom: 20px;
+  border: 2px solid black; /* 테두리 */
+  background-image: url('./lolL.png'); /* 배경 이미지 */
+  background-size: cover; /* 배경 크기 */
+  background-position: center; /* 배경 위치 */
+  background-repeat: no-repeat; /* 반복 없음 */
+  position: relative; /* 오버레이를 위한 위치 설정 */
+  
+  padding: 20px;
+  color: #fff; /* 텍스트 색상 */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* 텍스트 가독성을 위한 그림자 */
+}
+.review{
+  margin-left: 100px;
+}
+.review-slider {
+  max-height: 500px;
+  overflow-y: scroll;
+  padding: 10px;
+  border: 1px solid #ccc; 
+}
+
+.review-bord{ 
+  border-radius: 10px; /* 모서리를 둥글게 설정 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #b0f0f894;
+  padding: 5px;
+  display: flex;/* Flexbox 활성화 */
+  /*gap: 10px;*/ /* 간격 조정 */
+}
+
+.row-champion-img{
+  background-color: #1cf038;
+  margin-top: 10px;
+  display: flex; /* Flexbox 활성화 */
+  align-items: center; /* 요소를 세로 중앙 정렬 */
+  gap: 10px; /* 간격 조정 */
+}
+.champion-img{
+  margin: 5px;
+  width: 300px;
+  height: auto;
 }
