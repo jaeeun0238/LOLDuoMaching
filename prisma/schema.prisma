@@ -72,14 +72,14 @@ model ChatRoom {
 
 // 듀오 리뷰 정보를 저장하는 테이블
 model DuoReview {
-    duoReviewId   Int    @id @default(autoincrement()) // 리뷰 ID, 자동 증가
+    duoReviewId   Int      @id @default(autoincrement()) // 리뷰 ID, 자동 증가
     myUserId      Int // 리뷰 작성자 ID
     someoneUserId Int // 리뷰 대상자 ID
     content       String // 리뷰 내용
     starRating    Int // 별점
-    createdAt     Int // 생성 날짜
-    myUser        Users  @relation("DuoReviewsMy", fields: [myUserId], references: [userId]) // 리뷰 작성자와의 관계
-    someoneUser   Users  @relation("DuoReviewsSomeone", fields: [someoneUserId], references: [userId]) // 리뷰 대상자와의 관계
+    createdAt     DateTime @default(now()) // 생성 날짜
+    myUser        Users    @relation("DuoReviewsMy", fields: [myUserId], references: [userId]) // 리뷰 작성자와의 관계
+    someoneUser   Users    @relation("DuoReviewsSomeone", fields: [someoneUserId], references: [userId]) // 리뷰 대상자와의 관계
 }
 
 // 댓글 정보를 저장하는 테이블
