@@ -11,11 +11,11 @@ router.post('/duoreviews', authMiddleware, async (req, res, next) => {
 
   try {
     // 두 사용자 존재 여부 확인
-    const myUser = await prisma.user.findUnique({
+    const myUser = await prisma.users.findUnique({
       where: { userId: myUserId },
     });
 
-    const someoneUser = await prisma.user.findUnique({
+    const someoneUser = await prisma.users.findUnique({
       where: { userId: someoneUserId },
     });
 
