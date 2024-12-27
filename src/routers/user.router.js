@@ -102,7 +102,7 @@ router.post('/sign-in', async (req, res) => {
   res.cookie('userId', `Bearer ${token}`);
   return res
     .status(200)
-    .json({ message: '로그인 성공', email: accountData.email });
+    .json({ message: '로그인 성공', email: accountData.email, token });
 
   // res.cookie('userId', accountData.userId, {
   //   httpOnly: true, // XSS 공격 방지

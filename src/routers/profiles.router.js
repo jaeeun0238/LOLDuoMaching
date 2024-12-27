@@ -12,6 +12,7 @@ router.post('/profiles', authMiddleware, async (req, res, next) => {
       lolNickname,
       tier,
       line,
+      profileImage,
       mostPlay1,
       mostPlay2, // 추가된 필드
       mostPlay3, // 추가된 필드
@@ -25,6 +26,7 @@ router.post('/profiles', authMiddleware, async (req, res, next) => {
 
     const { userId } = req.user;
     // 1. 사용자가 이미 존재하는지 확인하고 없으면 새로 생성
+    console.log(email);
     let user = await prisma.users.findUnique({
       where: { email },
     });
@@ -42,6 +44,7 @@ router.post('/profiles', authMiddleware, async (req, res, next) => {
         lolNickname,
         tier,
         line,
+        profileImage,
         mostPlay1,
         mostPlay2,
         mostPlay3,
