@@ -7,9 +7,15 @@ const router = express.Router();
 
 // 듀오 리뷰 생성
 router.post('/duoreviews', authMiddleware, async (req, res, next) => {
-  const { myUserId, someoneUserId, content, starRating } = req.body;
+  const { someoneUserId, content, starRating } = req.body;
 
   try {
+    const myUserId = req.user.userId; // authMiddleware에서 설정된 userId 사용
+    if (!myUserId) {
+      return res
+        .status(401)
+        .json({ message: '인증된 사용자 정보가 필요합니다.' });
+    }
     // 두 사용자 존재 여부 확인
     const myUser = await prisma.users.findUnique({
       where: { userId: myUserId },
