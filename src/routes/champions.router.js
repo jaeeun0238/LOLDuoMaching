@@ -1,74 +1,72 @@
 // ./src/routes/champions.router.js
 import express from 'express';
-import axios from 'axios';
 import { prisma } from '../utils/prisma/index.js';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const router = express.Router();
+// import path from 'path'; // path 모듈을 import 해야 합니다.
+/*
+import path, { dirname } from 'path';
 
-const championRoutes = express.Router();
+const __dirname = dirname('../accet/champion_data.json');*/
+//V:\Sparta\CH4\Team\championAPI\2\LOLDuoMaching\src\accet\champion_data.json
 
-// 기본 페이지
-championRoutes.get('/champions', async (req, res) => {
-  // res.json({ success: true });
+// POST /api/update_champion_list - 테이블 초기화 후 JSON 파일의 데이터 삽입
+router.post('/update_champion_list', async (req, res) => {
   try {
-    const gstChampions = await prisma.champions.findMany({
-      select: { name: true, image: true },
-    });
-    if (!gstChampions || gstChampions.length === 0) {
-      return res.status(404).json({ errorMessage: '저장된 챔피언이 없습니다' });
-    }
-    res.status(200).json({ success: true, message: gstChampions });
-  } catch (error) {
-    res.status(500).json({ errorMessage: `서버 에러: ${error.message}` });
-  }
-});
+    console.log('지나가는가2');
+    const filePath = path.resolve(__dirname, '../accet/champion_data.json');
+    console.log(filePath);
+    const data = await fs.readFile(filePath, 'utf-8');
 
-// 챔피언 리스트 업데이트
-// post http://localhost:3000/api/update_champion_list/13.6.1
-// championRoutes.post('/update_champion_list/:version', async (req, res) => {
-//version형식 : '13.6.1'
+    console.log('지나가는가3');
+    // JSON 파일 읽기
+    const champions = JSON.parse(data);
 
-championRoutes.post('/update_champion_list', async (req, res) => {
-  //const { version } = req.params;
-  const { version } = req.body;
-  if (!version) {
-    return res.status(400).json({ errorMessage: '버전이 필요합니다' });
-  }
-  try {
-    // Riot API 정보
-    const RIOT_API_URL = `https://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/champion.json`;
-
-    // Riot API 호출
-    const { data } = await axios.get(RIOT_API_URL);
-    const champions = data.data;
-    if (!champions) {
-      return res.status(404).json({
-        errorMessage: 'Riot API에서 챔피언 데이터를 가져오지 못했습니다',
-      });
-    }
-
-    // 기존 데이터 삭제
+    // 테이블 초기화 (기존 데이터 삭제)
     await prisma.champions.deleteMany();
-    console.log('이게 될리가???');
+    console.log('테이블 초기화');
+    /*
+// 챔피언 정보를 저장하는 테이블
+model Champions {
+    championId Int    @id @default(autoincrement()) // 챔피언 ID, 자동 증가
+    image      String @unique // 챔피언 이미지 URL, 고유 값
+    name       String @unique // 챔피언 이름, 고유 값
+}
+*/
+    console.log('지나가는가4');
 
-    // 새 데이터 삽입
-    const championList = Object.values(champions).map((champ) => ({
-      //id: champ.id,
-      name: champ.name,
-      image: `http://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champ.image.full}`,
-    }));
+    // JSON 데이터 삽입
+    const createdChampions = await prisma.champions.createMany({
+      data: champions.map((champion) => ({
+        image: champion.image,
+        name: champion.name,
+      })),
 
-    // 오류발생
-    // TypeError: Cannot read properties of undefined (reading 'createMany')
-    await prisma.champions.createMany({ data: championList });
+      skipDuplicates: true, // 중복 데이터 무시
+    });
 
-    res.status(200).json({
-      success: true,
-      message: '챔피언 리스트 업데이트 완료!',
-      data: championList,
+    res.status(201).json({
+      message: `Champions table 에 데이터 채우기 완료. ${createdChampions.count}명.`,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ errorMessage: error.message });
+    console.error('Error updating champion list:', error);
+    res.status(500).json({ error: '업데이트 실패' });
   }
 });
 
-export default championRoutes;
+// GET /api/champions - 챔피언 테이블 전체 조회
+router.get('/champions', async (req, res) => {
+  try {
+    const champions = await prisma.champions.findMany();
+    res.status(200).json(champions);
+  } catch (error) {
+    console.error('Error fetching champions:', error);
+    res.status(500).json({ error: 'Failed to fetch champions.' });
+  }
+});
+
+export default router;
