@@ -12,14 +12,14 @@ const router = express.Router();
 const prisma = new PrismaClient();
 
 // Riot API 키를 가져옴
-const RIOT_API_KEY = 'RGAPI-736bb5d3-40e4-4459-91cb-e92393b28e69';
+const RIOT_API_KEY = 'RGAPI-13b5d87a-9e8a-4b3b-ba07-47097d9f9399';
 
 // Riot API 데이터 캐싱을 위한 객체와 캐싱 유효 시간(TTL) 설정
 const riotDataCache = {}; // 캐싱된 데이터를 저장하는 객체
 const CACHE_TTL = 60 * 60 * 1000; // 캐싱 유효 시간: 1시간 (밀리초)
 
 // Riot API 호출 함수
-const fetchRiotData = async (lolNickname) => {
+export const fetchRiotData = async (lolNickname) => {
   // 캐싱된 데이터가 있고, 유효 시간 내에 있으면 캐싱 데이터 반환
   if (
     riotDataCache[lolNickname] &&

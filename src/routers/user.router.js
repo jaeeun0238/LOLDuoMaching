@@ -96,7 +96,7 @@ router.post('/sign-in', async (req, res) => {
     // 서버가 비밀 키를 사용하여 토큰 변조 여부를 알 수 있다
     process.env.JWT_SECRET,
     // 엑세스 토큰
-    { expiresIn: '5m' },
+    { expiresIn: '1h' },
   );
 
   res.cookie('userId', `Bearer ${token}`);
