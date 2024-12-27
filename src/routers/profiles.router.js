@@ -12,7 +12,6 @@ router.post('/profiles', authMiddleware, async (req, res, next) => {
       lolNickname,
       tier,
       line,
-      profileImage,
       mostPlay1,
       mostPlay2, // 추가된 필드
       mostPlay3, // 추가된 필드
@@ -44,7 +43,6 @@ router.post('/profiles', authMiddleware, async (req, res, next) => {
         lolNickname,
         tier,
         line,
-        profileImage,
         mostPlay1,
         mostPlay2,
         mostPlay3,
