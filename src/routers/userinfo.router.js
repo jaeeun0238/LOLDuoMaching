@@ -12,7 +12,7 @@ const router = express.Router();
 const prisma = new PrismaClient();
 
 // Riot API 키를 가져옴
-const RIOT_API_KEY = 'RGAPI-13b5d87a-9e8a-4b3b-ba07-47097d9f9399';
+const RIOT_API_KEY = 'RGAPI-f439ab65-a4a0-4beb-9f00-9f8560565640';
 
 // Riot API 데이터 캐싱을 위한 객체와 캐싱 유효 시간(TTL) 설정
 const riotDataCache = {}; // 캐싱된 데이터를 저장하는 객체
@@ -20,7 +20,6 @@ const CACHE_TTL = 60 * 60 * 1000; // 캐싱 유효 시간: 1시간 (밀리초)
 
 // Riot API 호출 함수
 export const fetchRiotData = async (lolNickname) => {
-  // 캐싱된 데이터가 있고, 유효 시간 내에 있으면 캐싱 데이터 반환
   if (
     riotDataCache[lolNickname] &&
     Date.now() - riotDataCache[lolNickname].timestamp < CACHE_TTL
@@ -29,49 +28,45 @@ export const fetchRiotData = async (lolNickname) => {
   }
 
   try {
-    // Riot API 호출: 소환사 이름(lolNickname)을 사용해 Riot Games API에서 데이터 가져오기
     const riotResponse = await fetch(
       `https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/${encodeURIComponent(lolNickname)}?api_key=${RIOT_API_KEY}`,
       {
-        method: 'GET', // HTTP GET 메서드 사용
+        method: 'GET',
         headers: {
-          // 요청하는 클라이언트 정보 (Riot API에 필수로 요구됨)
-          'User-Agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-          'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7', // 응답 언어 우선순위
-          'Accept-Charset': 'application/x-www-form-urlencoded; charset=UTF-8', // 문자 인코딩
-          Origin: 'https://developer.riotgames.com', // 요청의 출처 (필수 헤더)
+          'User-Agent': 'Node.js Riot API Client',
+          'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
         },
       },
     );
 
-    // API 호출 실패 처리 (응답 코드가 200이 아닌 경우)
     if (!riotResponse.ok) {
+      if (riotResponse.status === 403) {
+        console.error('API 키가 유효하지 않거나 만료되었습니다.');
+      } else if (riotResponse.status === 429) {
+        console.error('Rate limit 초과: 요청을 잠시 멈추세요.');
+      }
       throw new Error(`Riot API 오류: ${riotResponse.status}`);
     }
 
-    // API 응답 데이터를 JSON으로 파싱
     const riotData = await riotResponse.json();
 
-    // 캐싱 데이터 저장: 소환사 정보와 타임스탬프
     riotDataCache[lolNickname] = {
       data: {
-        lolNickname, // 요청한 소환사 이름
-        summonerName: riotData.name, // 소환사 이름
-        summonerLevel: riotData.summonerLevel, // 소환사 레벨
-        profileIconId: riotData.profileIconId, // 소환사 프로필 아이콘 ID
+        lolNickname,
+        summonerName: riotData.name,
+        summonerLevel: riotData.summonerLevel,
+        profileIconId: riotData.profileIconId,
       },
-      timestamp: Date.now(), // 데이터가 캐싱된 시간
+      timestamp: Date.now(),
     };
 
-    return riotDataCache[lolNickname].data; // 캐싱된 데이터를 반환
+    return riotDataCache[lolNickname].data;
   } catch (error) {
-    // API 호출 중 오류 발생 시 콘솔에 출력
     console.error(
       `Riot API 호출 중 오류 발생 (${lolNickname}):`,
       error.message,
     );
-    return null; // 오류 발생 시 null 반환
+    return null;
   }
 };
 
@@ -85,8 +80,10 @@ router.get('/user/:userId', async (req, res) => {
     const user = await prisma.users.findUnique({
       where: { userId: parseInt(userId) }, // userId를 정수로 변환하여 검색
       include: {
+        Comments: true,
         profiles: {
           select: {
+            Posts: true,
             lolNickname: true, // 롤 닉네임
             tier: true, // 티어 정보
             line: true, // 선호 라인
@@ -96,8 +93,6 @@ router.get('/user/:userId', async (req, res) => {
             averageRating: true, // 평균 평가 점수
           },
         },
-        posts: true, // 사용자 게시글 포함
-        comments: true, // 사용자 댓글 포함
       },
     });
 

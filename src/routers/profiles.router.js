@@ -2,7 +2,7 @@ import express from 'express';
 import { prisma } from '../uts/prisma/index.js';
 import errModel from '../middlewares/error.middleware.js';
 import authMiddleware from '../middlewares/auth.middleware.js';
-import { fetchRiotData } from './userinfo.router.js'; // Riot API 호출 함수 가져오기
+// import { fetchRiotData } from './userinfo.router.js'; // Riot API 호출 함수 가져오기
 
 const router = express.Router();
 
@@ -36,14 +36,14 @@ router.post('/profiles', authMiddleware, async (req, res, next) => {
         .json({ message: '이미 존재하는 롤 닉네임입니다.' });
     }
 
-    // Riot API 호출로 닉네임 유효성 확인 및 추가 정보 가져오기
-    const riotData = await fetchRiotData(lolNickname);
+    // // Riot API 호출로 닉네임 유효성 확인 및 추가 정보 가져오기
+    // const riotData = await fetchRiotData(lolNickname);
 
-    if (!riotData) {
-      return res
-        .status(400)
-        .json({ message: '유효하지 않은 롤 닉네임입니다.' });
-    }
+    // if (!riotData) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: '유효하지 않은 롤 닉네임입니다.' });
+    // }
 
     // 1. 사용자가 이미 존재하는지 확인하고 없으면 새로 생성
     console.log(email);
