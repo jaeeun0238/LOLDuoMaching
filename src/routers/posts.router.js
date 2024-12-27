@@ -20,11 +20,8 @@ router.post('/posts', authMiddleware, async (req, res, next) => {
       data: {
         title,
         likeCount: likeCount ?? 0, // likeCount가 undefined일 경우 기본값 0으로 설정
-        postImage,
         content,
-        profile: {
-          connect: { profileId }, // profileId로 연결
-        },
+        profileId,
       },
     });
 

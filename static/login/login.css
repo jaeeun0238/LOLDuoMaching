@@ -1,0 +1,173 @@
+/* 기본 스타일 */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+
+/* 헤더 스타일 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-center {
+  position: absolute; /* 절대 위치 지정 */
+  left: 50%; /* 부모 요소의 50% 위치 */
+  transform: translateX(-50%); /* 요소의 폭의 절반만큼 왼쪽으로 이동 */
+}
+
+.header-center h1 {
+  font-size: 35px;
+  margin: 0;
+}
+
+.header-left .menu-button {
+  font-size: 16px;
+  padding: 10px 15px;
+  background-color: #e0e0e0;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  margin: 0 10px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.search-bar input {
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.search-bar button {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  background-color: #e0e0e0;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+/* 로그인 컨테이너 */
+.login-container {
+  display: flex; /* 수정된 부분 */
+  flex-direction: column; /* 수정된 부분 */
+  justify-content: center; /* 수정된 부분 */
+  align-items: center; /* 수정된 부분 */
+  border-radius: 20px;
+  background-color: lightblue;
+  width: 400px; /* 너비를 조정 */
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 20px auto 0px auto; /* 헤더와 간격을 주기 위해 추가 */
+}
+
+.input-group {
+  margin-bottom: 15px;
+  width: 100%; /* 컨테이너에 맞게 너비 설정 */
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  width: calc(100% - 20px); /* 패딩을 제외한 너비 설정 */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  width: 100%; /* 100% 너비를 유지 */
+  padding: 10px;
+  background-color: #28a745;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #79b185;
+}
+
+#message {
+  margin-top: 10px;
+  color: red;
+}
+
+#loginForm {
+  width: 100%; /* 전체 너비 사용 */
+}
+
+/* 탭 스타일 */
+.tabs {
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
+}
+
+.tabs ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tabs li {
+  margin: 0 50px 0 50px;
+}
+
+.tabs a {
+  display: block;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #333;
+  border-right: 1px solid #ccc;
+}
+
+.tabs a:last-child {
+  border-right: none;
+}
+
+.tabs a:hover {
+  background-color: #ddd;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}

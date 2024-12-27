@@ -1,4 +1,5 @@
 // Prisma 클라이언트 생성기를 설정합니다.
+// Prisma 클라이언트 생성기를 설정합니다.
 generator client {
   provider = "prisma-client-js"
 }
@@ -59,12 +60,11 @@ model Posts {
   Likes     likes[] // 게시글에 달린 좋아요
 }
 
-// 채팅방 정보를 저장하는 테이블
 model ChatRoom {
   chatRoomId Int      @id @default(autoincrement()) // 채팅방 ID, 자동 증가
   userId_1   Int // 첫 번째 사용자 ID
   userId_2   Int // 두 번째 사용자 ID
-  content    Int // 채팅 내용
+  content    String // 채팅 내용
   createdAt  DateTime @default(now()) // 생성 날짜
   user1      Users    @relation("ChatRooms1", fields: [userId_1], references: [userId]) // 첫 번째 사용자와의 관계
   user2      Users    @relation("ChatRooms2", fields: [userId_2], references: [userId]) // 두 번째 사용자와의 관계
