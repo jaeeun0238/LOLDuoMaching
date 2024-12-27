@@ -1,12 +1,9 @@
-// express 모듈 불러오기
-import express from "express";
-// socket.io 모듈 불러오기
-import socketIo from "socket.io"; // 기본 import
+import express from "express"; // 웹 서버 구축 프레임워크
+import socketIo from "socket.io"; //  실시간 웹 소켓 통신 위한 라이브러리
 import userRouter from "./src/routers/user.router.js";
-// Node.js 기본 내장 모듈 불러오기
-import http from "http";
-import fs from "fs/promises"; // fs를 Promise 기반으로 사용하기 위해 fs/promises로 수정
-import dotenv from "dotenv";
+import http from "http"; // Node.js 기본 내장 모듈
+import fs from "fs/promises"; // 파일 시스템 모듈로, Promise 기반으로 파일을 읽고 쓸 수 있게 해줌
+import dotenv from "dotenv"; // 환경 변수 관리 모듈
 import cors from "cors";
 
 dotenv.config();
@@ -17,15 +14,16 @@ const app = express();
 // express http 서버 생성
 const server = http.createServer(app);
 
-// 생성된 서버를 socket.io에 바인딩
-const io = socketIo(server); // socketIo로 인스턴스 생성
+// 생성된 http 서버에 Socket.IO를 바인딩 >> 실시간 통신 기능을 추
+const io = socketIo(server);
 
-app.use(cors()); // CORS 미들웨어 추가
+app.use(cors()); // CORS 미들웨어 추가 >>  다른 도메인에서의 요청을 허용
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api", [userRouter]);
-app.use("/static", express.static("static")); // static 폴더 내 모든 파일을 제공
+app.use("/static", express.static("static")); // static 폴더 내의 정적 파일을 제공
 
+// 각 경로에 대한 get 요청 처리, HTML 파일을 비동기적으로 읽어 클라이언트에 응답
 // 기본 경로
 app.get("/", async (req, res) => {
   try {
@@ -40,7 +38,7 @@ app.get("/", async (req, res) => {
 // 로그인 페이지
 app.get("/login", async (req, res) => {
   try {
-    const data = await fs.readFile("./static/login/login.html");
+    const data = await fs.readFile("./static/login/login.html"); // 로그인 페이지 HTML 파일 경로
     res.writeHead(200, { "Content-Type": "text/html" });
     res.end(data);
   } catch (err) {
@@ -51,7 +49,7 @@ app.get("/login", async (req, res) => {
 // 회원가입 페이지
 app.get("/signup", async (req, res) => {
   try {
-    const data = await fs.readFile("./static/signup/signup.html");
+    const data = await fs.readFile("./static/signup/signup.html"); // 회원가입 페이지 HTML 파일 경로
     res.writeHead(200, { "Content-Type": "text/html" });
     res.end(data);
   } catch (err) {
@@ -60,17 +58,19 @@ app.get("/signup", async (req, res) => {
 });
 
 // 마이페이지
-app.get("/index", async (req, res) => {
+app.get("/myPage", async (req, res) => {
   try {
-    const data = await fs.readFile("./static/index/index.html"); // 마이페이지 HTML 파일 경로
+    const data = await fs.readFile("./static/myPage/myPage.html"); // 마이페이지 HTML 파일 경로
     res.writeHead(200, { "Content-Type": "text/html" });
     res.end(data);
   } catch (err) {
     res.send("에러");
   }
 });
+
+// 클라이언트가 채팅에 연결될 때마다 호출되는 이벤트 핸들러 > 현재 버튼 형식으로 접속 가능
 io.on("connection", (socket) => {
-  // 새로운 유저가 접속했을 경우 다른 소켓에게도 알려줌
+  // 새로운 유저가 접속
   socket.on("newUser", (name) => {
     console.log(`${name} 님이 접속하였습니다.`);
 
