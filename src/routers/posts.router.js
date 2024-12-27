@@ -9,7 +9,8 @@ const router = express.Router();
 router.post('/posts', authMiddleware, async (req, res, next) => {
   try {
     const { title, likeCount, content } = req.body;
-    const profileId = req.user.profileId; // 인증된 사용자 profileId
+    console.log(req.user);
+    const profileId = req.user.userId; // 인증된 사용자 profileId
     // profileId가 누락된 경우 오류 처리
     if (!profileId) {
       return res.status(400).json({ message: 'profileId가 필요합니다.' });
@@ -19,6 +20,7 @@ router.post('/posts', authMiddleware, async (req, res, next) => {
       data: {
         title,
         likeCount: likeCount ?? 0, // likeCount가 undefined일 경우 기본값 0으로 설정
+        postImage,
         content,
         profile: {
           connect: { profileId }, // profileId로 연결
