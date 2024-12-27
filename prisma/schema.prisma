@@ -1,4 +1,5 @@
 // Prisma 클라이언트 생성기를 설정합니다.
+// Prisma 클라이언트 생성기를 설정합니다.
 generator client {
     provider = "prisma-client-js"
 }
@@ -11,87 +12,81 @@ datasource db {
 
 // 사용자 정보를 저장하는 테이블
 model Users {
-    userId            Int         @id @default(autoincrement()) // 사용자 ID, 자동 증가
-    email             String      @unique // 이메일, 고유 값
-    password          String // 비밀번호
-    userName          String // 사용자 이름
-    nickname          String      @unique // 닉네임, 고유 값
-    createdAt         DateTime    @default(now()) // 생성 날짜
-    Profiles          Profiles[] // 사용자의 프로필
-    ChatRooms1        ChatRoom[]  @relation("ChatRooms1") // 채팅방 (userId_1 관계)
-    ChatRooms2        ChatRoom[]  @relation("ChatRooms2") // 채팅방 (userId_2 관계)
-    DuoReviewsMy      DuoReview[] @relation("DuoReviewsMy") // 내가 적은 듀오 리뷰
-    DuoReviewsSomeone DuoReview[] @relation("DuoReviewsSomeone") // 다른 사람의 리뷰
-    Comments          Comments[] // 사용자가 작성한 댓글
-    Likes             likes[] // 사용자가 남긴 좋아요
-    FreeBoards        FreeBoard[] // 사용자가 작성한 자유 게시글
+    userId              Int         @id @default(autoincrement())
+    email               String      @unique
+    password            String
+    userName            String
+    nickname            String      @unique
+    createdAt           DateTime    @default(now())
+    profiles            Profiles[] // 1:N 관계로 변경
+    posts               Posts[]
+    chatRooms           ChatRoom[]
+    duoReviewsAsMyUser  DuoReview[] @relation("MyUserDuoReviews")
+    duoReviewsAsSomeone DuoReview[] @relation("SomeoneUserDuoReviews")
+    comments            Comments[]
 }
 
-// 프로필 정보를 저장하는 테이블
-model Profiles {
-    profileId     Int     @id @default(autoincrement()) // 프로필 ID, 자동 증가
-    userId        Int     @unique // 사용자 ID, 고유 값
-    championId    Int // 챔피언 ID
-    lolNickname   String // 롤 닉네임
-    profileImage  String?
-    tier          String // 티어 정보
-    line          String // 선호 라인
-    mostPlay1     String // 가장 많이 플레이한 챔피언 1
-    mostPlay2     String // 가장 많이 플레이한 챔피언 2
-    mostPlay3     String // 가장 많이 플레이한 챔피언 3
-    averageRating Int // 평균 평가 점수
-    user          Users   @relation(fields: [userId], references: [userId]) // 사용자와의 관계
-    Posts         Posts[] // 작성한 게시글
-}
-
-// 게시글 정보를 저장하는 테이블
 model Posts {
-    postId    Int        @id @default(autoincrement()) // 게시글 ID, 자동 증가
-    profileId Int // 프로필 ID, 고유 값
-    title     String // 게시글 제목
-    postImage String?
-    likeCount Int // 좋아요 수
-    content   String // 게시글 내용
-    createdAt DateTime   @default(now()) // 생성 날짜
-    updatedAt DateTime   @updatedAt // 수정 날짜
-    profile   Profiles   @relation(fields: [profileId], references: [profileId]) // 프로필과의 관계
-    Comments  Comments[] // 게시글에 달린 댓글
-    Likes     likes[] // 게시글에 달린 좋아요
+    postId      Int        @id @default(autoincrement()) // Primary Key
+    profileId   Int // Unique 제약 조건 제거
+    title       String
+    like        Int        @default(0) // 기본값 0
+    content     String
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
+    profile     Profiles   @relation(fields: [profileId], references: [profileId]) // Foreign Key
+    comments    Comments[] // 1:N 관계
+    Users       Users?     @relation(fields: [usersUserId], references: [userId])
+    usersUserId Int?
 }
 
-// 채팅방 정보를 저장하는 테이블
+model Profiles {
+    profileId     Int        @id @default(autoincrement())
+    userId        Int // 외래키
+    lolNickname   String
+    tier          String
+    line          String
+    mostPlay      String
+    averageRating Int        @default(0)
+    user          Users      @relation(fields: [userId], references: [userId])
+    posts         Posts[]
+    ChatRoom      ChatRoom[]
+}
+
 model ChatRoom {
-    chatRoomId Int      @id @default(autoincrement()) // 채팅방 ID, 자동 증가
-    userId_1   Int // 첫 번째 사용자 ID
-    userId_2   Int // 두 번째 사용자 ID
-    content    Int // 채팅 내용
-    createdAt  DateTime @default(now()) // 생성 날짜
-    user1      Users    @relation("ChatRooms1", fields: [userId_1], references: [userId]) // 첫 번째 사용자와의 관계
-    user2      Users    @relation("ChatRooms2", fields: [userId_2], references: [userId]) // 두 번째 사용자와의 관계
+    chatRoomId Int      @id @default(autoincrement())
+    userId     Int
+    profileId  Int
+    content    String
+    createdAt  DateTime @default(now())
+    user       Users    @relation(fields: [userId], references: [userId])
+    profile    Profiles @relation(fields: [profileId], references: [profileId])
 }
 
 // 듀오 리뷰 정보를 저장하는 테이블
 model DuoReview {
-    duoReviewId   Int      @id @default(autoincrement()) // 리뷰 ID, 자동 증가
-    myUserId      Int // 리뷰 작성자 ID
-    someoneUserId Int // 리뷰 대상자 ID
-    content       String // 리뷰 내용
-    starRating    Int // 별점
-    createdAt     DateTime @default(now()) // 생성 날짜
-    myUser        Users    @relation("DuoReviewsMy", fields: [myUserId], references: [userId]) // 리뷰 작성자와의 관계
-    someoneUser   Users    @relation("DuoReviewsSomeone", fields: [someoneUserId], references: [userId]) // 리뷰 대상자와의 관계
+    duoReviewId   Int      @id @default(autoincrement())
+    myUserId      Int
+    someoneUserId Int
+    content       String
+    starRating    Int
+    createdAt     DateTime @default(now()) // 변경
+    myUser        Users    @relation("MyUserDuoReviews", fields: [myUserId], references: [userId])
+    someoneUser   Users    @relation("SomeoneUserDuoReviews", fields: [someoneUserId], references: [userId])
 }
+
+// 댓글 정보를 저장하는 테이블y
 
 // 댓글 정보를 저장하는 테이블
 model Comments {
-    commentId Int      @id @default(autoincrement()) // 댓글 ID, 자동 증가
-    postId    Int // 게시글 ID
-    userId    Int // 사용자 ID
-    content   String // 댓글 내용
-    createdAt DateTime @default(now()) // 생성 날짜
-    updatedAt DateTime @updatedAt // 수정 날짜
-    post      Posts    @relation(fields: [postId], references: [postId]) // 게시글과의 관계
-    user      Users    @relation(fields: [userId], references: [userId]) // 사용자와의 관계
+    commentId Int      @id @default(autoincrement())
+    postId    Int
+    userId    Int
+    content   String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    post      Posts    @relation(fields: [postId], references: [postId])
+    user      Users    @relation(fields: [userId], references: [userId])
 }
 
 // 챔피언 정보를 저장하는 테이블
@@ -103,18 +98,18 @@ model Champions {
 
 // 좋아요 정보를 저장하는 테이블
 model likes {
-    likeId Int   @id @default(autoincrement()) // 좋아요 ID, 자동 증가
+    likeId Int    @id @default(autoincrement()) // 좋아요 ID, 자동 증가
     userId Int // 사용자 ID
     postId Int // 게시글 ID
-    user   Users @relation(fields: [userId], references: [userId]) // 사용자와의 관계
-    post   Posts @relation(fields: [postId], references: [postId]) // 게시글과의 관계
+    user   Users  @relation(fields: [userId], references: [userId]) // 사용자와의 관계
+    post   Posts  @relation(fields: [postId], references: [postId]) // 게시글과의 관계
 
     @@unique([userId, postId]) // 사용자와 게시글 조합의 고유성 보장
 }
 
 // 자유 게시판 정보를 저장하는 테이블
 model FreeBoard {
-    freeBordId Int      @id @default(autoincrement()) // 자유 게시판 글 ID, 자동 증가
+    freeBordId Int   @id @default(autoincrement()) // 자유 게시판 글 ID, 자동 증가
     userId     Int // 사용자 ID
     content    String // 글 내용
     createAt   DateTime @default(now()) // 생성 날짜
