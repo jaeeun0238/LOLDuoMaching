@@ -95,7 +95,8 @@ router.post("/sign-in", async (req, res) => {
     { expiresIn: "5m" }
   );
 
-  res.cookie("userId", `Bearer ${token}`);
+  res.cookie("token", `Bearer ${token}`);
+  res.cookie("userId", `${accountData.userId}`);
   return res
     .status(200)
     .json({ message: "로그인 성공", email: accountData.email });
@@ -106,6 +107,7 @@ router.post("/sign-out", (req, res) => {
   try {
     // authorization 쿠키를 삭제하여 로그아웃 처리
     res.clearCookie("userId");
+    res.clearCookie("token");
     return res.status(200).json({ message: "로그아웃 성공" });
   } catch (error) {
     next(error); // 에러 핸들링 미들웨어로 전달
