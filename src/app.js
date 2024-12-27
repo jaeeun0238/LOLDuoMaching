@@ -6,7 +6,6 @@ import profileRouter from './routers/profiles.router.js';
 import postRouter from './routers/posts.router.js';
 import duoReviewRouter from './routers/duoreview.router.js';
 import commentRouter from './routers/comments.router.js';
-
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -18,8 +17,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api', [
   userRouter,
-  userinfoRouter,
   profileRouter,
+  userinfoRouter,
   postRouter,
   duoReviewRouter,
   commentRouter,

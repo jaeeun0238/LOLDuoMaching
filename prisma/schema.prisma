@@ -5,12 +5,18 @@ generator client {
 
 // 데이터베이스 연결 설정
 datasource db {
+  <<<<<<< HEAD
   provider = "mysql"
   url      = env("DATABASE_URL")
+  =======
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  >>>>>>> origin/sign/jaeeun
 }
 
 // 사용자 정보를 저장하는 테이블
 model Users {
+  <<<<<<< HEAD
   userId            Int         @id @default(autoincrement()) // 사용자 ID, 자동 증가
   email             String      @unique // 이메일, 고유 값
   password          String // 비밀번호
@@ -25,10 +31,27 @@ model Users {
   Comments          Comments[] // 사용자가 작성한 댓글
   Likes             likes[] // 사용자가 남긴 좋아요
   FreeBoards        FreeBoard[] // 사용자가 작성한 자유 게시글
+  =======
+  userId            Int         @id @default(autoincrement()) // 사용자 ID, 자동 증가
+  email             String      @unique // 이메일, 고유 값
+  password          String // 비밀번호
+  userName          String // 사용자 이름
+  nickname          String      @unique // 닉네임, 고유 값
+  createdAt         DateTime    @default(now()) // 생성 날짜
+  Profiles          Profiles[] // 사용자의 프로필
+  ChatRooms1        ChatRoom[]  @relation("ChatRooms1") // 채팅방 (userId_1 관계)
+  ChatRooms2        ChatRoom[]  @relation("ChatRooms2") // 채팅방 (userId_2 관계)
+  DuoReviewsMy      DuoReview[] @relation("DuoReviewsMy") // 내가 적은 듀오 리뷰
+  DuoReviewsSomeone DuoReview[] @relation("DuoReviewsSomeone") // 다른 사람의 리뷰
+  Comments          Comments[] // 사용자가 작성한 댓글
+  Likes             likes[] // 사용자가 남긴 좋아요
+  FreeBoards        FreeBoard[] // 사용자가 작성한 자유 게시글
+  >>>>>>> origin/sign/jaeeun
 }
 
 // 프로필 정보를 저장하는 테이블
 model Profiles {
+  <<<<<<< HEAD
   profileId     Int     @id @default(autoincrement()) // 프로필 ID, 자동 증가
   userId        Int     @unique // 사용자 ID, 고유 값
   championId    Int // 챔피언 ID
@@ -42,6 +65,21 @@ model Profiles {
   averageRating Int // 평균 평가 점수
   user          Users   @relation(fields: [userId], references: [userId]) // 사용자와의 관계
   Posts         Posts[] // 작성한 게시글
+  =======
+  profileId     Int     @id @default(autoincrement()) // 프로필 ID, 자동 증가
+  userId        Int     @unique // 사용자 ID, 고유 값
+  championId    Int // 챔피언 ID
+  lolNickname   String // 롤 닉네임
+  profileImage  String
+  tier          String // 티어 정보
+  line          String // 선호 라인
+  mostPlay1     String // 가장 많이 플레이한 챔피언 1
+  mostPlay2     String // 가장 많이 플레이한 챔피언 2
+  mostPlay3     String // 가장 많이 플레이한 챔피언 3
+  averageRating Int // 평균 평가 점수
+  user          Users   @relation(fields: [userId], references: [userId]) // 사용자와의 관계
+  Posts         Posts[] // 작성한 게시글
+  >>>>>>> origin/sign/jaeeun
 }
 
 // 게시글 정보를 저장하는 테이블
@@ -72,14 +110,14 @@ model ChatRoom {
 
 // 듀오 리뷰 정보를 저장하는 테이블
 model DuoReview {
-  duoReviewId   Int    @id @default(autoincrement()) // 리뷰 ID, 자동 증가
+  duoReviewId   Int      @id @default(autoincrement()) // 리뷰 ID, 자동 증가
   myUserId      Int // 리뷰 작성자 ID
   someoneUserId Int // 리뷰 대상자 ID
   content       String // 리뷰 내용
   starRating    Int // 별점
-  createdAt     Int // 생성 날짜
-  myUser        Users  @relation("DuoReviewsMy", fields: [myUserId], references: [userId]) // 리뷰 작성자와의 관계
-  someoneUser   Users  @relation("DuoReviewsSomeone", fields: [someoneUserId], references: [userId]) // 리뷰 대상자와의 관계
+  createdAt     DateTime @default(now()) // 생성 날짜
+  myUser        Users    @relation("DuoReviewsMy", fields: [myUserId], references: [userId]) // 리뷰 작성자와의 관계
+  someoneUser   Users    @relation("DuoReviewsSomeone", fields: [someoneUserId], references: [userId]) // 리뷰 대상자와의 관계
 }
 
 // 댓글 정보를 저장하는 테이블

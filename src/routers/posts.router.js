@@ -1,13 +1,16 @@
 import express from 'express';
 import { prisma } from '../uts/prisma/index.js';
+import errModel from '../middlewares/error.middleware.js';
+import authMiddleware from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
 // 게시글 생성
-router.post('/posts', async (req, res, next) => {
+router.post('/posts', authMiddleware, async (req, res, next) => {
   try {
-    const { title, likeCount, content, profileId } = req.body;
-
+    const { title, likeCount, content } = req.body;
+    console.log(req.user);
+    const profileId = req.user.userId; // 인증된 사용자 profileId
     // profileId가 누락된 경우 오류 처리
     if (!profileId) {
       return res.status(400).json({ message: 'profileId가 필요합니다.' });
@@ -17,6 +20,7 @@ router.post('/posts', async (req, res, next) => {
       data: {
         title,
         likeCount: likeCount ?? 0, // likeCount가 undefined일 경우 기본값 0으로 설정
+        postImage,
         content,
         profile: {
           connect: { profileId }, // profileId로 연결
@@ -53,7 +57,7 @@ router.get('/posts', async (req, res, next) => {
 });
 
 // 게시글 수정
-router.patch('/posts/:postId', async (req, res, next) => {
+router.patch('/posts/:postId', authMiddleware, async (req, res, next) => {
   try {
     const { postId } = req.params; // 수정할 게시글의 ID
     const { title, likeCount, content } = req.body; // 수정할 데이터
@@ -81,7 +85,7 @@ router.patch('/posts/:postId', async (req, res, next) => {
 });
 
 // 게시글 삭제
-router.delete('/posts/:postId', async (req, res, next) => {
+router.delete('/posts/:postId', authMiddleware, async (req, res, next) => {
   try {
     const { postId } = req.params;
 

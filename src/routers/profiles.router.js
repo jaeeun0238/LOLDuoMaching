@@ -1,28 +1,32 @@
 import express from 'express';
 import { prisma } from '../uts/prisma/index.js';
+import errModel from '../middlewares/error.middleware.js';
+import authMiddleware from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
 // 프로필 생성
-router.post('/profiles', async (req, res, next) => {
+router.post('/profiles', authMiddleware, async (req, res, next) => {
   try {
     const {
       lolNickname,
       tier,
       line,
+      profileImage,
       mostPlay1,
       mostPlay2, // 추가된 필드
       mostPlay3, // 추가된 필드
       averageRating,
       championId,
-      userId,
       email,
       password,
       userName,
       nickname,
     } = req.body;
 
+    const { userId } = req.user;
     // 1. 사용자가 이미 존재하는지 확인하고 없으면 새로 생성
+    console.log(email);
     let user = await prisma.users.findUnique({
       where: { email },
     });
@@ -40,6 +44,7 @@ router.post('/profiles', async (req, res, next) => {
         lolNickname,
         tier,
         line,
+        profileImage,
         mostPlay1,
         mostPlay2,
         mostPlay3,
@@ -58,7 +63,7 @@ router.post('/profiles', async (req, res, next) => {
 });
 
 // 프로필 수정
-router.patch('/profiles/:profileId', async (req, res, next) => {
+router.patch('/profiles/:profileId', authMiddleware, async (req, res, next) => {
   try {
     const { profileId } = req.params;
     const {
@@ -100,32 +105,36 @@ router.patch('/profiles/:profileId', async (req, res, next) => {
 });
 
 // 프로필 삭제
-router.delete('/profiles/:profileId', async (req, res, next) => {
-  try {
-    const { profileId } = req.params;
+router.delete(
+  '/profiles/:profileId',
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const { profileId } = req.params;
 
-    const parsedProfileId = parseInt(profileId, 10);
+      const parsedProfileId = parseInt(profileId, 10);
 
-    const profile = await prisma.profiles.findUnique({
-      where: { profileId: parsedProfileId },
-    });
+      const profile = await prisma.profiles.findUnique({
+        where: { profileId: parsedProfileId },
+      });
 
-    if (!profile) {
-      return res.status(404).json({ message: '프로필을 찾을 수 없습니다.' });
+      if (!profile) {
+        return res.status(404).json({ message: '프로필을 찾을 수 없습니다.' });
+      }
+
+      await prisma.profiles.delete({
+        where: { profileId: parsedProfileId },
+      });
+
+      return res.status(200).json({ message: '프로필이 삭제되었습니다.' });
+    } catch (error) {
+      console.error('Error deleting profile:', error);
+      return res.status(500).json({
+        message: '프로필 삭제 중 오류가 발생했습니다.',
+        error: error.message,
+      });
     }
-
-    await prisma.profiles.delete({
-      where: { profileId: parsedProfileId },
-    });
-
-    return res.status(200).json({ message: '프로필이 삭제되었습니다.' });
-  } catch (error) {
-    console.error('Error deleting profile:', error);
-    return res.status(500).json({
-      message: '프로필 삭제 중 오류가 발생했습니다.',
-      error: error.message,
-    });
-  }
-});
+  },
+);
 
 export default router;
