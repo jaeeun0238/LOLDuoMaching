@@ -24,6 +24,8 @@ model Users {
     duoReviewsAsMyUser  DuoReview[] @relation("MyUserDuoReviews")
     duoReviewsAsSomeone DuoReview[] @relation("SomeoneUserDuoReviews")
     comments            Comments[]
+    likes               Likes[]
+    freeBoard           FreeBoard[]
 }
 
 model Posts {
@@ -38,6 +40,7 @@ model Posts {
     comments    Comments[] // 1:N 관계
     Users       Users?     @relation(fields: [usersUserId], references: [userId])
     usersUserId Int?
+    likes       Likes[]
 }
 
 model Profiles {
@@ -97,7 +100,7 @@ model Champions {
 }
 
 // 좋아요 정보를 저장하는 테이블
-model likes {
+model Likes {
     likeId Int    @id @default(autoincrement()) // 좋아요 ID, 자동 증가
     userId Int // 사용자 ID
     postId Int // 게시글 ID
