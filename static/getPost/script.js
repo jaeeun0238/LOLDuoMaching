@@ -1,79 +1,75 @@
-// JavaScript 코드
-const createPostCards = (posts) => {
-  const container = document.getElementById('post-container'); // 게시글 카드가 들어갈 컨테이너
-  container.innerHTML = ''; // 기존 카드 제거
+/*
+document
+  .getElementById('postSaveButton')
+  .addEventListener('click', async () => {
+    const title = document.getElementById('postTitle').value.trim(); // 제목 입력값
+    const content = document.getElementById('postContent').value.trim(); // 내용 입력값
+    const postImage = document.getElementById('postImage').value.trim(); // 내용 입력값
+    const errorMessage = document.getElementById('errorMessage'); // 에러 메시지 표시 요소
+    const message = document.getElementById('message'); // 성공 메시지 표시 요소
 
-  posts.forEach((post) => {
-    // 카드의 HTML 요소 생성
-    const card = document.createElement('div');
-    card.className = 'card mb-3';
+    errorMessage.textContent = ''; // 이전 에러 메시지 초기화
+    message.textContent = ''; // 이전 성공 메시지 초기화
 
-    const row = document.createElement('div');
-    row.className = 'row g-0';
+    if (!title || !content || !postImage) {
+      errorMessage.textContent = '게시글의 제목과 내용을을 모두 입력해주세요.';
+      return;
+    }
+    try {
+      const response = await fetch('/api/posts', {
+        method: 'POST',
 
-    const imgCol = document.createElement('div');
-    imgCol.className = 'col-md-4';
+        body: JSON.stringify({ title, content }),
+      });
+      if (!response) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '게시글 저장에 실패했습니다.');
+      }
+      const data = await response.json(); // 응답 데이터 파싱  message.textContent = data.message || '게시글이 성공적으로 저장되었습니다.';
+    } catch (error) {
+      console.error('개시글 저장 실패:', error);
+      errorMessage.textContent =
+        error.message || '알 수 없는 오류가 발생했습니다.';
+    }
+  }); 
 
-    const img = document.createElement('img');
-    img.src = post.postImg || 'https://via.placeholder.com/200'; // 이미지 URL
-    img.className = 'img-fluid rounded-start';
-    img.alt = post.title;
-    img.style = 'width: 200px; height: 200px; object-fit: cover;';
+*/
+document.addEventListener('DOMContentLoaded', async () => {
+  const postId = window.location.pathname.split('/').pop(); // URL에서 postId 추출
+  const apiUrl = `/posts/select/${postId}`; // API URL 구성
 
-    const textCol = document.createElement('div');
-    textCol.className = 'col-md-8';
+  try {
+    // 게시글 데이터 조회
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error('게시글을 불러오는 데 실패했습니다.');
+    }
 
-    const cardBody = document.createElement('div');
-    cardBody.className = 'card-body';
+    const { data } = await response.json(); // API 응답에서 데이터 추출
 
-    const cardTitle = document.createElement('h5');
-    cardTitle.className = 'card-title';
-    cardTitle.textContent = post.title; // 게시글 제목
+    // 데이터 반영
+    document.getElementById('title').textContent = data.title;
+    document.getElementById('nickname').textContent = data.nickname;
+    document.getElementById('likeCount').textContent = data.likeCount;
+    document.getElementById('createdAt').textContent = new Date(
+      data.createdAt,
+    ).toLocaleDateString();
+    document.getElementById('updatedAt').textContent = new Date(
+      data.updatedAt,
+    ).toLocaleDateString();
+    document.getElementById('postImage').src = data.postImage;
+    document.getElementById('content').textContent = data.content;
 
-    const cardText = document.createElement('p');
-    cardText.className = 'card-text';
-    cardText.textContent =
-      post.content.slice(0, 30) + (post.content.length > 30 ? '...' : ''); // 게시글 내용 (30자)
-
-    const cardFooter = document.createElement('p');
-    cardFooter.className = 'card-text';
-    const smallText = document.createElement('small');
-    smallText.className = 'text-body-secondary';
-    smallText.textContent = `Last updated ${new Date(post.updatedAt).toLocaleString()}`; // 마지막 수정 날짜
-
-    // 요소 조립
-    imgCol.appendChild(img);
-    row.appendChild(imgCol);
-
-    cardBody.appendChild(cardTitle);
-    cardBody.appendChild(cardText);
-    cardFooter.appendChild(smallText);
-    cardBody.appendChild(cardFooter);
-
-    textCol.appendChild(cardBody);
-    row.appendChild(textCol);
-
-    card.appendChild(row);
-    container.appendChild(card);
-  });
-};
-
-const sortPosts = (posts, criteria) => {
-  if (criteria === 'likes') {
-    return posts.sort((a, b) => b.like - a.like);
-  } else if (criteria === 'title') {
-    return posts.sort((a, b) => a.title.localeCompare(b.title));
-  } else if (criteria === 'updatedAt') {
-    return posts.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    // 프로필 데이터 반영
+    const profileData = data.profile;
+    document.getElementById('lolNickname').textContent =
+      profileData.lolNickname;
+    document.getElementById('tier').textContent = profileData.tier;
+    document.getElementById('line').textContent = profileData.line;
+  } catch (error) {
+    console.error('데이터를 불러오는 중 오류 발생:', error);
+    alert('데이터를 불러올 수 없습니다. 다시 시도해주세요.');
   }
-  return posts;
-};
+});
 
-// 드롭다운 선택 이벤트
-const handleSortChange = (posts) => {
-  const dropdown = document.getElementById('sort-dropdown');
-  dropdown.addEventListener('change', () => {
-    const sortedPosts = sortPosts(posts, dropdown.value);
-    createPostCards(sortedPosts);
-  });
-};
+// 뎃글창<- 가져오기, 수정버튼 추가

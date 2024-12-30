@@ -6,9 +6,10 @@ import authMiddleware from '../middlewares/auth.middleware.js';
 const router = express.Router();
 
 // 게시글 생성
+// 게시글 이미지 추가(프론트엔드도 수정)
 router.post('/posts', authMiddleware, async (req, res, next) => {
   try {
-    const { title, /* likeCount,*/ content } = req.body;
+    const { title, /* likeCount,*/ content, postImage } = req.body; // 이미지 추가가
     // likeCount받을 필요 없어보입니다.
     console.log(req.user);
     const profileId = req.user.userId; // 인증된 사용자 profileId
@@ -22,6 +23,7 @@ router.post('/posts', authMiddleware, async (req, res, next) => {
         title,
         // likeCount: likeCount ?? 0, // likeCount가 undefined일 경우 기본값 0으로 설정
         content,
+        postImage,
         profileId,
       },
     });
@@ -54,7 +56,8 @@ router.get('/posts', async (req, res, next) => {
   }
 });
 
-// 게시글 전체 조회
+// 게시글 조회
+// 뎃글 조회, 체팅 기능 추가하기
 router.get('/posts/select/:postId', async (req, res, next) => {
   const { postId } = req.params; // 조회할 게시글의 ID
   try {
@@ -63,6 +66,9 @@ router.get('/posts/select/:postId', async (req, res, next) => {
       include: {
         profile: {
           select: {
+            lolNickname: true,
+            tier: true,
+            line: true,
             user: {
               select: {
                 nickname: true, // 닉네임 포함
@@ -94,6 +100,8 @@ router.get('/posts/select/:postId', async (req, res, next) => {
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
     };
+
+    const coments = [];
 
     return res
       .status(200)

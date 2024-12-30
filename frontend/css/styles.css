@@ -207,7 +207,7 @@ h2 {
   padding-left: 10px; /* 이미지와 텍스트 간의 여백 추가 */
 }
 
-.post{
+.width100{
   width: 100%;
   
 }
@@ -422,7 +422,18 @@ button:hover {
 
 
 /* 포스트 작성 */
-#postSaveButton{ display: flex;
+.greenButton{ display: flex;
   background-color: #1cf0388c;
   margin: 3px;   
-  right: 0;}
+  right: 0;
+}
+.redButton{ display: flex;
+  background-color: rgba(255, 32, 32, 0.822);
+  margin: 3px;   
+  right: 0;
+}
+
+#postEditButton{  
+  float: right; /* 버튼을 줄의 오른쪽 끝에 배치 */
+  margin-left: auto; /* 필요 시 다른 요소와 간격 확보 */
+}

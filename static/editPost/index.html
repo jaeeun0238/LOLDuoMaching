@@ -59,34 +59,42 @@
   <div class="post-feed">
     <div class="container">
       <!-- 게시글 -->
+      <div class="width100">
 
-      <!--------------------------------->
-      <div class="profile-card">
-        <div class="card-content">
-          <form id="creatPostForm">
-            <div class="input-group">
-              <label for="postTitle">제목</label>
-              <input type="postTitle" id="postTitle" required>
-            </div>
 
-            <div class="input-group">
-              <label for="postImage">이미지 추가</label>
-              <!-- url -->
-              <input type="postImage" id="postImage" required>
-            </div>
-
-            <div class="input-group">
-              <label for="postContent">content</label>
-              <input type="postContent" id="postContent" required>
-            </div>
-
-            <button id="postSaveButton">저장</button>
-          </form>
-        </div>
         <!--------------------------------->
+        <!-- <div class="profile-card"> -->
+        <form id="creatPostForm">
+          <div class="input-group">
+            <label for="postTitle">제목</label>
+            <input type="postTitle" id="postTitle" required>
+          </div>
+
+          <div class="input-group">
+            <label for="postImage">이미지</label>
+            <!-- url -->
+            <input type="postImage" id="postImage" required>
+          </div>
+
+          <div class="input-group">
+            <label for="postContent">content</label>
+            <input type="postContent" id="postContent" required>
+          </div>
+          <div class="row-feed">
+            <button class="greenButton" id="postSaveButton">저장</button>
+            <button class="redButton" id="postDeleatButton">삭제</button>
+          </div>
+        </form>
       </div>
+      <!--------------------------------->
     </div>
+
   </div>
+
+
+  </div>
+  </div>
+
 
 </body>
 

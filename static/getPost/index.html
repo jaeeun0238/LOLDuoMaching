@@ -60,28 +60,39 @@
   <div class="post-feed">
     <div class="container">
       <!-- 게시글 -->
-      <div class="post">
-        <h1 class="post-title">게시글 제목</h1>
+      <div class="width100">
+        <h1 class="post-title" id="title">게시글 제목</h1>
+        <h3 id="nickname">작성자 닉네임</h3>
+        <ln> ❤️ <strong id="likeCount"> 좋아요 수</strong></ln>
+        <ul>
+          <ln> 등록 : <strong id="createdAt"> 00.00.00.</strong></ln>
+          <ln> 수정 : <strong id="updatedAt"> 00.00.00.</strong></ln>
+        </ul>
+        <ul>
+          <button class="greenButton" id="postEditButton">수정</button>
+          <button id="enterChat"> 채팅하기 </button>
+        </ul>
 
-        <button id="enterChat"> 채팅하기 </button>
-
+        <!-- 페이지 이동 -->
 
         <!--------------------------------->
         <div class="profile-card">
           <div class="card-content">
 
-            <img src="https://assets.puzzlefactory.com/puzzle/321/377/original.webp" alt="프로필 이미지"
+            <img id="postImage" src="https://assets.puzzlefactory.com/puzzle/321/377/original.webp" alt="프로필 이미지"
               class="profile-img chamImg" style="border-radius: 10%;">
-            <h2 class="lol-nickname">소환사 닉네임:<strong>냥이쉑</strong> </h2>
+
             <ul class="profile-info">
-              <li><strong>티어:</strong> 골드 III</li>
-              <li><strong>라인:</strong> 미드</li>
+
+              <li>소환사 닉네임 : <strong id="lolNickname">냥이쉑</strong></li>
+              <li>티어 : <strong id="tier">골드 III</strong> </li>
+              <li>라인 : <strong id="line"> 미드</strong></li>
             </ul>
           </div>
         </div>
         <!--------------------------------->
       </div>
-      <p class="post-content">
+      <p class="post-content" id="content">
         여기에 게시글 내용을 작성하세요. 게시글은 여러 줄로 작성할 수 있습니다.
       </p>
       <!--이미지, 프로필 보이기-->
