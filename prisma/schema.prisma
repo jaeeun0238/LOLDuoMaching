@@ -18,12 +18,12 @@ model Users {
   nickname          String      @unique // 닉네임, 고유 값
   createdAt         DateTime    @default(now()) // 생성 날짜
   profiles          Profiles[] // 사용자의 프로필
-  ChatRooms1        ChatRoom[]  @relation("ChatRooms1") // 채팅방 (userId_1 관계)
-  ChatRooms2        ChatRoom[]  @relation("ChatRooms2") // 채팅방 (userId_2 관계)
-  DuoReviewsMy      DuoReview[] @relation("DuoReviewsMy") // 내가 적은 듀오 리뷰
-  DuoReviewsSomeone DuoReview[] @relation("DuoReviewsSomeone") // 다른 사람의 리뷰
-  Comments          Comments[] // 사용자가 작성한 댓글
-  Likes             likes[] // 사용자가 남긴 좋아요
+  chatRooms1        ChatRoom[]  @relation("ChatRooms1") // 채팅방 (userId_1 관계)
+  chatRooms2        ChatRoom[]  @relation("ChatRooms2") // 채팅방 (userId_2 관계)
+  duoReviewsMy      DuoReview[] @relation("DuoReviewsMy") // 내가 적은 듀오 리뷰
+  duoReviewsSomeone DuoReview[] @relation("DuoReviewsSomeone") // 다른 사람의 리뷰
+  comments          Comments[] // 사용자가 작성한 댓글
+  likes             Likes[] // 사용자가 남긴 좋아요
   FreeBoards        FreeBoard[] // 사용자가 작성한 자유 게시글
 }
 
@@ -54,8 +54,8 @@ model Posts {
   createdAt DateTime   @default(now()) // 생성 날짜
   updatedAt DateTime   @updatedAt // 수정 날짜
   profile   Profiles   @relation(fields: [profileId], references: [profileId]) // 프로필과의 관계
-  Comments  Comments[] // 게시글에 달린 댓글
-  Likes     likes[] // 게시글에 달린 좋아요
+  comments  Comments[] // 게시글에 달린 댓글
+  likes     Likes[] // 게시글에 달린 좋아요
 }
 
 // 채팅방 정보를 저장하는 테이블
@@ -101,7 +101,7 @@ model Champions {
 }
 
 // 좋아요 정보를 저장하는 테이블
-model likes {
+model Likes {
   likeId Int   @id @default(autoincrement()) // 좋아요 ID, 자동 증가
   userId Int // 사용자 ID
   postId Int // 게시글 ID
