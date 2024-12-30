@@ -8,7 +8,8 @@ const router = express.Router();
 // 게시글 생성
 router.post('/posts', authMiddleware, async (req, res, next) => {
   try {
-    const { title, likeCount, content } = req.body;
+    const { title, /* likeCount,*/ content } = req.body;
+    // likeCount받을 필요 없어보입니다.
     console.log(req.user);
     const profileId = req.user.userId; // 인증된 사용자 profileId
     // profileId가 누락된 경우 오류 처리
@@ -19,7 +20,7 @@ router.post('/posts', authMiddleware, async (req, res, next) => {
     const post = await prisma.posts.create({
       data: {
         title,
-        likeCount: likeCount ?? 0, // likeCount가 undefined일 경우 기본값 0으로 설정
+        // likeCount: likeCount ?? 0, // likeCount가 undefined일 경우 기본값 0으로 설정
         content,
         profileId,
       },
