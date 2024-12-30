@@ -31,7 +31,6 @@ model Users {
 model Profiles {
   profileId     Int     @id @default(autoincrement()) // 프로필 ID, 자동 증가
   userId        Int // 사용자 ID, 고유 값
-  championId    Int // 챔피언 ID
   lolNickname   String  @unique
   profileImage  String?
   tier          String // 티어 정보
