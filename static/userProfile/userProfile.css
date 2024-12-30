@@ -116,7 +116,7 @@ body {
 
 /* 메인 */
 #container {
-  display: flex; /* Flexbox 사용 */
+  display: flex;
 }
 
 #proflie {
@@ -129,8 +129,23 @@ body {
   height: 600px;
 }
 
-#main {
-  margin: 50px auto 20px 0px;
+#main1 {
+  display: flex; /* 각 영역도 flexbox로 설정 */
+  flex-direction: column; /* 세로 방향으로 정렬 */
+  justify-content: center; /* 세로 중앙 정렬 */
+  align-items: center; /* 가로 중앙 정렬 */
+  margin: 50px auto 20px auto;
+  margin-top: 100px;
+  padding: 14px;
+  border-radius: 20px;
+  background-color: lightblue;
+  text-align: center;
+  width: 600px;
+  height: 600px;
+}
+
+#main2 {
+  margin: 50px auto 20px auto;
   margin-top: 100px;
   padding: 14px;
   border-radius: 20px;
@@ -286,4 +301,31 @@ label {
 
 textarea {
   height: 40px; /* 텍스트 영역 높이 */
+}
+
+.profile {
+  text-align: center;
+}
+
+.profile img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.champions {
+  margin-top: 1rem;
+}
+
+.champions div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.champions img {
+  width: 50px;
+  height: 50px;
+  margin-right: 1rem;
 }
