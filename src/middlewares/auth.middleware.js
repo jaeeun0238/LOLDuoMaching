@@ -8,20 +8,25 @@ export default async function (req, res, next) {
   // 토큰 확인
   try {
     // 쿠키에서 토큰 가져오기
-    const token = req.cookies.token; // 쿠키 이름이 "authorization"인 경우
+    const authorization = req.cookies.authorization; // 쿠키 이름이 "authorization"인 경우
 
-    if (!token) throw new Error("토큰이 존재하지 않습니다.");
+    if (!authorization) throw new Error("토큰이 존재하지 않습니다.");
+
+    const [tokenType, token] = authorization.split(" ");
+
+    if (tokenType !== "Bearer")
+      throw new Error("토큰 타입이 일치하지 않습니다.");
 
     // 토큰 검증
-    const decodedToken = jwt.verify(token, process.env.JWT_KEY);
-    const userPID = decodedToken.userPID;
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decodedToken.userId;
 
     // 사용자 조회
-    const user = await prisma.userData.findUnique({
-      where: { userPID: userPID },
+    const user = await prisma.users.findUnique({
+      where: { userId: userId },
     });
     if (!user) {
-      res.clearCookie("authorization");
+      res.clearCookie("token");
       throw new Error("토큰 사용자가 존재하지 않습니다.");
     }
 
@@ -30,7 +35,7 @@ export default async function (req, res, next) {
     next();
     // 오류 처리
   } catch (error) {
-    res.clearCookie("authorization");
+    res.clearCookie("token");
 
     // 토큰이 만료되었거나, 조작되었을 때, 에러 메시지를 다르게 출력합니다
     switch (error.name) {

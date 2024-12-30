@@ -37,24 +37,36 @@ document.getElementById("searchButton").addEventListener("click", async () => {
 
     // 프로필 저장을 위한 데이터 준비
     const profileData = {
-      line: formData.get("line"),
-      tier: formData.get("tier"),
-      mostPlay1: formData.get("mostChampion1"), // 첫 번째 챔피언
-      mostPlay2: formData.get("mostChampion2"), // 두 번째 챔피언
-      mostPlay3: formData.get("mostChampion3"), // 세 번째 챔피언
-      // Riot API에서 받은 정보 추가
-      summonerName: data.fullName, // 실제 소환사 이름으로 대체
-      level: data.summonerLevel, // 실제 레벨로 대체
+      lolNickname: data.fullName, // 실제 소환사 이름으로 대체
       profileImage: data.profileIconLink, // 실제 이미지 링크로 대체
     };
 
-    // 프로필 저장 요청
-    await saveProfile(profileData);
+    // 프로필 데이터 저장을 위한 전역 변수 설정
+    window.profileData = profileData; // 전역 변수로 저장
   } catch (error) {
     console.error("조회 실패:", error.message);
     errorMessage.textContent = error.message;
   }
 });
+
+// 프로필 저장 버튼 클릭 시 이벤트 리스너 추가
+document
+  .getElementById("profileForm")
+  .addEventListener("submit", async (event) => {
+    event.preventDefault(); // 기본 폼 제출 동작 방지
+
+    const profileData = {
+      ...window.profileData, // 전역 변수에서 프로필 데이터 가져오기
+      tier: document.getElementById("tier").value.trim(), // tier 입력 필드의 ID
+      line: document.getElementById("line").value.trim(), // line 입력 필드의 ID
+      mostPlay1: document.getElementById("mostChampion1").value.trim(), // 첫 번째 챔피언 입력 필드의 ID
+      mostPlay2: document.getElementById("mostChampion2").value.trim(), // 두 번째 챔피언 입력 필드의 ID
+      mostPlay3: document.getElementById("mostChampion3").value.trim(), // 세 번째 챔피언 입력 필드의 ID
+    };
+
+    // 프로필 저장 요청
+    await saveProfile(profileData);
+  });
 
 async function saveProfile(profileData) {
   try {

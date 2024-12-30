@@ -83,7 +83,7 @@ router.post("/sign-in", async (req, res) => {
   // 입력받은 사용자의 비밀번호와 데이터베이스에 저장된 비밀번호를 비교합니다.
   else if (!(await bcrypt.compare(password, accountData.password)))
     return res.status(401).json({ message: "비밀번호가 일치하지 않습니다." });
-  console.log("Secret Key:", process.env.SERVER_ACCESS_KEY);
+  console.log("Secret Key:", process.env.JWT_SECRET);
 
   const token = jwt.sign(
     {
@@ -92,10 +92,10 @@ router.post("/sign-in", async (req, res) => {
 
     process.env.JWT_SECRET,
     // 엑세스 토큰
-    { expiresIn: "5m" }
+    { expiresIn: "1d" }
   );
 
-  res.cookie("token", `Bearer ${token}`);
+  res.cookie("authorization", `Bearer ${token}`);
   res.cookie("userId", `${accountData.userId}`);
   return res
     .status(200)

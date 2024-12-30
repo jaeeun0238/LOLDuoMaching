@@ -1,13 +1,14 @@
 // src/routers/profile.router.js
 import express from "express";
 import authMiddleware from "../middlewares/auth.middleware.js";
-
+import { prisma } from "../uts/prisma/index.js";
 const router = express.Router();
 
 router.post("/save-profile", authMiddleware, async (req, res) => {
+  const { userId } = req.user;
   const {
     lolNickname,
-    profileImage,
+    // profileImage,
     tier,
     line,
     mostPlay1,
@@ -15,15 +16,7 @@ router.post("/save-profile", authMiddleware, async (req, res) => {
     mostPlay3,
   } = req.body;
 
-  console.log(lolNickname);
-  console.log(profileImage);
-  console.log(tier);
-  console.log(line);
-  console.log(mostPlay1);
-  console.log(mostPlay2);
-  console.log(mostPlay3);
-
-  const userId = req.user.userId; // authMiddleware에서 설정된 userId 사용
+  const userID = req.user.userId; // authMiddleware에서 설정된 userId 사용
   if (!userId) {
     return res
       .status(401)
@@ -44,22 +37,44 @@ router.post("/save-profile", authMiddleware, async (req, res) => {
 
   try {
     const userExists = await prisma.users.findUnique({
-      where: { userId: userId },
+      where: { userId: userID },
     });
 
     if (!userExists) {
       return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
     }
+
+    // 챔피언 이름으로 ID 조회
+    const mostPlay1Champion = await prisma.champions.findUnique({
+      where: { name: mostPlay1 },
+    });
+    const mostPlay2Champion = await prisma.champions.findUnique({
+      where: { name: mostPlay2 },
+    });
+    const mostPlay3Champion = await prisma.champions.findUnique({
+      where: { name: mostPlay3 },
+    });
+
+    // 챔피언 ID가 존재하는지 확인
+    if (!mostPlay1Champion || !mostPlay2Champion || !mostPlay3Champion) {
+      return res.status(404).json({ message: "챔피언을 찾을 수 없습니다." });
+    }
+
     // 프로필 데이터베이스에 저장
     const newProfile = await prisma.profiles.create({
       data: {
         lolNickname,
-        profileImage,
+        // profileImage,
         tier,
         line,
-        mostPlay1,
-        mostPlay2,
-        mostPlay3,
+        mostPlay1: mostPlay1Champion.name,
+        mostPlay2: mostPlay2Champion.name,
+        mostPlay3: mostPlay3Champion.name,
+        championId: 1,
+        averageRating: 1,
+        user: {
+          connect: { userId: userId }, // 사용자 연결
+        },
       },
     });
 
