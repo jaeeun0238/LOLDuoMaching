@@ -31,7 +31,7 @@ model Users {
 model Profiles {
   profileId     Int     @id @default(autoincrement()) // 프로필 ID, 자동 증가
   userId        Int // 사용자 ID, 고유 값
-  championId    Int // 챔피언 ID
+
   lolNickname   String  @unique
   profileImage  String?
   tier          String // 티어 정보
@@ -40,6 +40,7 @@ model Profiles {
   mostPlay2     String // 가장 많이 플레이한 챔피언 2
   mostPlay3     String // 가장 많이 플레이한 챔피언 3
   averageRating Int // 평균 평가 점수
+
   user          Users   @relation(fields: [userId], references: [userId]) // 사용자와의 관계
   Posts         Posts[] // 작성한 게시글
 }
@@ -120,3 +121,4 @@ model FreeBoard {
   createAt   DateTime @default(now()) // 생성 날짜
   user       Users    @relation(fields: [userId], references: [userId]) // 사용자와의 관계
 }
+
