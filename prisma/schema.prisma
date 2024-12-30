@@ -39,8 +39,9 @@ model Profiles {
   mostPlay2     String // 가장 많이 플레이한 챔피언 2
   mostPlay3     String // 가장 많이 플레이한 챔피언 3
   averageRating Int // 평균 평가 점수
-  user          Users   @relation(fields: [userId], references: [userId]) // 사용자와의 관계
-  Posts         Posts[] // 작성한 게시글
+
+  user  Users   @relation(fields: [userId], references: [userId]) // 사용자와의 관계
+  Posts Posts[] // 작성한 게시글
 }
 
 // 게시글 정보를 저장하는 테이블

@@ -1,10 +1,13 @@
 import express from "express"; // 웹 서버 구축 프레임워크
 import socketIo from "socket.io"; //  실시간 웹 소켓 통신 위한 라이브러리
 import userRouter from "./src/routers/user.router.js";
+import getInfo from "./src/routers/getLolInfo.router.js";
+import setProfile from "./src/routers/profile.router.js";
 import http from "http"; // Node.js 기본 내장 모듈
 import fs from "fs/promises"; // 파일 시스템 모듈로, Promise 기반으로 파일을 읽고 쓸 수 있게 해줌
 import dotenv from "dotenv"; // 환경 변수 관리 모듈
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -17,10 +20,11 @@ const server = http.createServer(app);
 // 생성된 http 서버에 Socket.IO를 바인딩 >> 실시간 통신 기능을 추
 const io = socketIo(server);
 
+app.use(cookieParser());
 app.use(cors()); // CORS 미들웨어 추가 >>  다른 도메인에서의 요청을 허용
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/api", [userRouter]);
+app.use("/api", [userRouter, getInfo, setProfile]);
 app.use("/static", express.static("static")); // static 폴더 내의 정적 파일을 제공
 
 // 각 경로에 대한 get 요청 처리, HTML 파일을 비동기적으로 읽어 클라이언트에 응답
@@ -57,10 +61,22 @@ app.get("/signup", async (req, res) => {
   }
 });
 
-// 마이페이지
-app.get("/myPage", async (req, res) => {
+// 다른 유저페이지
+app.get("/userProfile/:userId", async (req, res) => {
+  const { userId } = req.params; // URL 파라미터에서 userId 추출
   try {
-    const data = await fs.readFile("./static/myPage/myPage.html"); // 마이페이지 HTML 파일 경로
+    const data = await fs.readFile("./static/userProfile/userProfile.html");
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.end(data);
+  } catch (err) {
+    res.send("에러");
+  }
+});
+
+// 프로필 설정
+app.get("/setProfile", async (req, res) => {
+  try {
+    const data = await fs.readFile("./static/setProfile/setProfile.html"); // 마이페이지 HTML 파일 경로
     res.writeHead(200, { "Content-Type": "text/html" });
     res.end(data);
   } catch (err) {
