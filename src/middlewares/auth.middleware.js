@@ -21,13 +21,14 @@ export default async function (req, res, next) {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decodedToken.userId;
 
+
     // 사용자 조회
     const user = await prisma.users.findUnique({
       where: { userId: userId },
     });
     if (!user) {
-      res.clearCookie("token");
-      throw new Error("토큰 사용자가 존재하지 않습니다.");
+      res.clearCookie('authorization');
+      throw new Error('토큰 사용자가 존재하지 않습니다.');
     }
 
     // req.user에 사용자 정보를 저장
@@ -35,18 +36,18 @@ export default async function (req, res, next) {
     next();
     // 오류 처리
   } catch (error) {
-    res.clearCookie("token");
+    res.clearCookie('authorization');
 
     // 토큰이 만료되었거나, 조작되었을 때, 에러 메시지를 다르게 출력합니다
     switch (error.name) {
-      case "TokenExpiredError":
-        return res.status(401).json({ message: "토큰이 만료되었습니다." });
-      case "JsonWebTokenError":
-        return res.status(401).json({ message: "토큰이 조작되었습니다." });
+      case 'TokenExpiredError':
+        return res.status(401).json({ message: '토큰이 만료되었습니다.' });
+      case 'JsonWebTokenError':
+        return res.status(401).json({ message: '토큰이 조작되었습니다.' });
       default:
         return res
           .status(401)
-          .json({ message: error.message ?? "비정상적인 요청입니다." });
+          .json({ message: error.message ?? '비정상적인 요청입니다.' });
     }
   }
 }
