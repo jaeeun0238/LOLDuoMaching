@@ -103,16 +103,17 @@ app.get('/setProfile', async (req, res) => {
   }
 });
 
-// 클라이언트가 채팅에 연결될 때마다 호출되는 이벤트 핸들러 > 현재 버튼 형식으로 접속 가능
+// 클라이언트가 서버에 접속될 때(connection) 실행 >> io.on('connection', callback)
 io.on('connection', (socket) => {
-  // 새로운 유저가 접속
+  // 클라이언트로부터 특정 이벤트 발생 시 실행 >> socket.on(event, callback)
+  // 이벤트 >> 새로운 유저 접속
   socket.on('newUser', (name) => {
     console.log(`${name} 님이 접속하였습니다.`);
 
     // 소켓에 이름 저장해두기
     socket.name = name;
 
-    // 모든 소켓에게 전송
+    // 연결된 모든 클라이언트에 사용자 입장 알림 전송
     io.emit('update', {
       type: 'connect',
       name: 'SERVER',
@@ -120,18 +121,19 @@ io.on('connection', (socket) => {
     });
   });
 
-  // 전송한 메시지 받기
+  // 이벤트 >> 메시지 전송
   socket.on('message', (data) => {
     // 받은 데이터에 누가 보냈는지 이름을 추가
     data.name = socket.name;
 
     console.log(data);
 
+    //연결된 다른 모든 클라이언트에게 데이터를 전송 >> socket.broadcast.emit(event, data)
     // 보낸 사람을 제외한 나머지 유저에게 메시지 전송
     socket.broadcast.emit('update', data);
   });
 
-  // 접속 종료
+  // 이벤트 >> 접속 종료
   socket.on('disconnect', () => {
     console.log(`${socket.name}님이 나가셨습니다.`);
 

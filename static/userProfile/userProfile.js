@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('enterChat').addEventListener('click', () => {
     const name = profile?.lolNickname || '익명'; // 프로필 데이터의 닉네임 사용
 
-    // 서버에 새로운 유저가 왔다고 알림
+    // 입장 버튼을 클릭하면 newUser 이벤트와 사용자 이름을 서버에 전달
     socket.emit('newUser', name);
   });
 
