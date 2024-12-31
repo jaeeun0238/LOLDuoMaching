@@ -43,6 +43,7 @@ router.get('/posts', async (req, res, next) => {
       include: {
         profile: true, // 프로필 정보도 포함하여 게시글과 연결된 프로필 정보도 조회
       },
+      // 여기에서 드롭셀렉트맞게 정렬하고가자
       orderBy: {
         createdAt: 'desc', // 게시글 생성일 기준 내림차순 정렬
       },

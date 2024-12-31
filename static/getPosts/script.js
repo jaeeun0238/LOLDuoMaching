@@ -1,5 +1,6 @@
 // script.js
 
+let postsState = []; // 상태로 게시글 관리
 // 게시글 데이터를 렌더링하는 함수
 function renderPosts(posts) {
   const postContainer = document.getElementById('post-container');
@@ -31,10 +32,11 @@ function renderPosts(posts) {
 // 게시글 데이터를 가져오는 함수
 async function fetchPosts() {
   try {
-    const response = await fetch('/api/posts');
+    const response = await fetch('/api/posts', { method: 'GET' });
     const data = await response.json();
 
     if (response.ok) {
+      postsState = data.data; // 상태에 게시글 저장
       renderPosts(data.data);
     } else {
       console.error(data.message);
@@ -58,16 +60,24 @@ function sortPosts(posts, criterion) {
 
 // 정렬 드롭다운 이벤트 리스너
 async function handleSortChange() {
+  /**
+              <option value="likes">좋아요 순</option>
+              <option value="title">제목 사전순</option>
+              <option value="updatedAt">최신 수정 순</option>
+   */
   const criterion = document.getElementById('sort-dropdown').value;
-  const response = await fetch('/api/posts');
-  const data = await response.json();
+  const sortedPosts = sortPosts(postsState, criterion);
+  renderPosts(sortedPosts);
 
-  if (response.ok) {
-    const sortedPosts = sortPosts(data.data, criterion);
-    renderPosts(sortedPosts);
-  } else {
-    console.error(data.message);
-  }
+  // const response = await fetch('/api/posts');
+  // const data = await response.json();
+
+  // if (response.ok) {
+  //   const sortedPosts = sortPosts(data.data, criterion);
+  //   renderPosts(sortedPosts);
+  // } else {
+  //   console.error(data.message);
+  // }
 }
 
 // 초기화
