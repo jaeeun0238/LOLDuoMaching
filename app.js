@@ -16,6 +16,10 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 import errorMiddleware from './src/middlewares/error.middleware.js';
+import express from 'express'; // 웹 서버 구축 프레임워크
+import socketIo from 'socket.io'; //  실시간 웹 소켓 통신 위한 라이브러리
+
+import imageMapping from './src/routers/image.router.js';
 
 dotenv.config();
 
@@ -32,7 +36,9 @@ app.use(cookieParser());
 app.use(cors()); // CORS 미들웨어 추가 >>  다른 도메인에서의 요청을 허용
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use('/api', [
+  imageMapping,
   userRouter,
   getInfo,
   setProfile,
@@ -41,7 +47,6 @@ app.use('/api', [
   commentRouter,
   championRoutes,
 ]);
-
 app.use('/static', express.static('static')); // static 폴더 내의 정적 파일을 제공
 
 // 각 경로에 대한 get 요청 처리, HTML 파일을 비동기적으로 읽어 클라이언트에 응답
@@ -81,6 +86,7 @@ app.get('/signup', async (req, res) => {
 // 다른 유저페이지
 app.get('/userProfile/:userId', async (req, res) => {
   const { userId } = req.params; // URL 파라미터에서 userId 추출
+
   try {
     const data = await fs.readFile('./static/userProfile/userProfile.html');
     res.writeHead(200, { 'Content-Type': 'text/html' });
