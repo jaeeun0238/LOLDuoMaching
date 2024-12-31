@@ -6,11 +6,9 @@ import authMiddleware from '../middlewares/auth.middleware.js';
 const router = express.Router();
 
 // 게시글 생성
-// 게시글 이미지 추가(프론트엔드도 수정)
 router.post('/posts', authMiddleware, async (req, res, next) => {
   try {
-    const { title, /* likeCount,*/ content, postImage } = req.body; // 이미지 추가가
-    // likeCount받을 필요 없어보입니다.
+    const { title, likeCount, content } = req.body;
     console.log(req.user);
     const profileId = req.user.userId; // 인증된 사용자 profileId
     // profileId가 누락된 경우 오류 처리
@@ -21,9 +19,8 @@ router.post('/posts', authMiddleware, async (req, res, next) => {
     const post = await prisma.posts.create({
       data: {
         title,
-        // likeCount: likeCount ?? 0, // likeCount가 undefined일 경우 기본값 0으로 설정
+        likeCount: likeCount ?? 0, // likeCount가 undefined일 경우 기본값 0으로 설정
         content,
-        postImage,
         profileId,
       },
     });
@@ -43,72 +40,17 @@ router.get('/posts', async (req, res, next) => {
       include: {
         profile: true, // 프로필 정보도 포함하여 게시글과 연결된 프로필 정보도 조회
       },
-      // 여기에서 드롭셀렉트맞게 정렬하고가자
       orderBy: {
         createdAt: 'desc', // 게시글 생성일 기준 내림차순 정렬
       },
     });
-
+    if (!posts) {
+      console.log('No data');
+    }
     return res
       .status(200)
       .json({ message: '게시글이 전체 조회되었습니다.', data: posts });
   } catch (error) {
-    next(error); // 에러를 다음 핸들러로 전달
-  }
-});
-
-// 게시글 조회
-// 뎃글 조회, 체팅 기능 추가하기
-router.get('/posts/select/:postId', async (req, res, next) => {
-  const { postId } = req.params; // 조회할 게시글의 ID
-  try {
-    const post = await prisma.posts.findUnique({
-      where: { postId: parseInt(postId, 10) }, // ID로 게시글 검색
-      include: {
-        profile: {
-          select: {
-            lolNickname: true,
-            tier: true,
-            line: true,
-            user: {
-              select: {
-                nickname: true, // 닉네임 포함
-              },
-            },
-          },
-        },
-      },
-      select: {
-        title: true,
-        postImage: true,
-        likeCount: true,
-        content: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-
-    if (!post) {
-      return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
-    }
-    // 결과 데이터에 닉네임 추가
-    const result = {
-      nickname: post.profile.user.nickname,
-      title: post.title,
-      postImage: post.postImage,
-      likeCount: post.likeCount,
-      content: post.content,
-      createdAt: post.createdAt,
-      updatedAt: post.updatedAt,
-    };
-
-    const coments = [];
-
-    return res
-      .status(200)
-      .json({ message: '게시글이 조회되었습니다.', data: result });
-  } catch (error) {
-    console.error('게시글 조회 오류:', error);
     next(error); // 에러를 다음 핸들러로 전달
   }
 });

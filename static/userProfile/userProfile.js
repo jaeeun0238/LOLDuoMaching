@@ -1,16 +1,36 @@
 const socket = io();
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // 현재 URL에서 사용자 ID 추출
+  const userId = window.location.pathname.split('/').pop(); // URL의 마지막 부분을 가져옴
+
+  try {
+    // 프로필 데이터 가져오기
+    const response = await fetch(`/api/profile/${userId}`);
+    if (!response.ok) {
+      throw new Error('프로필 정보를 불러올 수 없습니다.');
+    }
+
+    const profile = await response.json();
+
+    // 프로필 정보 렌더링
+    const profileContainer = document.getElementById('profile');
+    profileContainer.innerHTML = `
+      <div class="profile-details">
+        <img src="${profile.profileImage || '/static/default-avatar.png'}" alt="프로필 이미지" />
+        <h3>${profile.lolNickname}</h3>
+        <p>티어: ${profile.tier}</p>
+        <p>라인: ${profile.line}</p>
+        <p>대표 챔피언: ${profile.mostPlay1}, ${profile.mostPlay2}, ${profile.mostPlay3}</p>
+      </div>
+    `;
+  } catch (error) {
+    console.error('프로필 데이터를 불러오는 중 오류 발생:', error);
+  }
+
   /* 채팅에 들어가기 버튼 클릭 시 실행 */
   document.getElementById('enterChat').addEventListener('click', () => {
-    // 이름을 입력받고
-    // ****추후 로그인후 쿠키나 세션에 전달된 닉네임을 받아 채팅에 입장하도록 수정!!!!****
-    let name = prompt('반갑습니다!', ''); // let으로 변경
-
-    // 이름이 빈칸인 경우
-    if (!name) {
-      name = '익명';
-    }
+    const name = profile?.lolNickname || '익명'; // 프로필 데이터의 닉네임 사용
 
     // 서버에 새로운 유저가 왔다고 알림
     socket.emit('newUser', name);
@@ -18,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* 서버로부터 데이터 받은 경우 */
   socket.on('update', (data) => {
-    // 화살표 함수로 변경
     const chat = document.getElementById('chat');
 
     const message = document.createElement('div');
@@ -46,10 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* 메시지 전송 함수 */
-  // window.send로 설정, 전역 함수로 만들어 HTML에서 직접 호출가능
   window.send = function send() {
-    // 전역 함수로 설정
-    // 입력되어있는 데이터 가져오기
     const message = document.getElementById('test').value;
 
     // 가져왔으니 데이터 빈칸으로 변경
@@ -94,5 +110,66 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   } else {
     console.error('로그아웃 버튼 요소를 찾을 수 없습니다.');
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  // 리뷰 버튼 이벤트 등록
+  document.getElementById('reviewEnter').addEventListener('click', () => {
+    const comment = document.getElementById('comment').value.trim(); // 댓글 내용
+    const rating = document.getElementById('rating').value; // 별점
+
+    // 입력값 검증
+    if (!comment) {
+      alert('댓글을 입력해주세요!');
+      return;
+    }
+
+    // 리뷰 데이터를 서버로 보내거나 클라이언트에서 처리
+    const reviewData = {
+      nickname: '사용자: ', // 추후 로그인 시스템으로 사용자 닉네임 연동
+      comment: comment,
+      rating: rating,
+    };
+
+    // 서버에 데이터 전송 (예: socket.io, API 요청 등)
+    // socket.emit("newReview", reviewData); // 서버 전송
+
+    // 서버가 없다면 클라이언트에 직접 추가
+    addReviewToList(reviewData);
+
+    // 입력 필드 초기화
+    document.getElementById('comment').value = '';
+    document.getElementById('rating').value = '★';
+  });
+
+  // 리뷰 리스트에 리뷰 추가하는 함수
+  function addReviewToList(reviewData) {
+    const reviewList = document.querySelector('.review-list');
+
+    const reviewItem = document.createElement('div');
+    reviewItem.classList.add('review-item');
+
+    // 닉네임
+    const nicknameSpan = document.createElement('span');
+    nicknameSpan.classList.add('nickname');
+    nicknameSpan.textContent = reviewData.nickname;
+
+    // 댓글
+    const commentSpan = document.createElement('span');
+    commentSpan.classList.add('comment');
+    commentSpan.textContent = reviewData.comment;
+
+    // 별점
+    const ratingSpan = document.createElement('span');
+    ratingSpan.classList.add('rating');
+    ratingSpan.textContent = reviewData.rating;
+
+    // 조합
+    reviewItem.appendChild(nicknameSpan);
+    reviewItem.appendChild(commentSpan);
+    reviewItem.appendChild(ratingSpan);
+
+    reviewList.appendChild(reviewItem);
   }
 });

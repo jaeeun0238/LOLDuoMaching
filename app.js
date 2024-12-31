@@ -7,7 +7,8 @@ import setProfile from './src/routers/profile.router.js';
 import postRouter from './src/routers/posts.router.js';
 import duoReviewRouter from './src/routers/duoreview.router.js';
 import commentRouter from './src/routers/comments.router.js';
-import championRoutes from './src/routers/champions.router.js';
+import imageMapping from './src/routers/image.router.js';
+import championsRouter from './src/routers/champions.router.js';
 
 import http from 'http'; // Node.js 기본 내장 모듈
 import fs from 'fs/promises'; // 파일 시스템 모듈로, Promise 기반으로 파일을 읽고 쓸 수 있게 해줌
@@ -16,10 +17,6 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 import errorMiddleware from './src/middlewares/error.middleware.js';
-import express from 'express'; // 웹 서버 구축 프레임워크
-import socketIo from 'socket.io'; //  실시간 웹 소켓 통신 위한 라이브러리
-
-import imageMapping from './src/routers/image.router.js';
 
 dotenv.config();
 
@@ -45,7 +42,7 @@ app.use('/api', [
   postRouter,
   duoReviewRouter,
   commentRouter,
-  championRoutes,
+  championsRouter,
 ]);
 app.use('/static', express.static('static')); // static 폴더 내의 정적 파일을 제공
 
@@ -93,6 +90,7 @@ app.get('/userProfile/:userId', async (req, res) => {
     res.end(data);
   } catch (err) {
     res.send('에러');
+    res.status(500).send('파일을 로드할 수 없습니다.');
   }
 });
 
@@ -147,8 +145,6 @@ io.on('connection', (socket) => {
     });
   });
 });
-
-app.use(errorMiddleware);
 
 // 서버를 8080 포트로 listen
 server.listen(8080, () => {
