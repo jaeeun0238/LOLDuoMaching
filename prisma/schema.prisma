@@ -25,6 +25,9 @@ model Users {
     comments          Comments[] // 사용자가 작성한 댓글
     likes             Likes[] // 사용자가 남긴 좋아요
     FreeBoards        FreeBoard[] // 사용자가 작성한 자유 게시글
+
+    emailVerify      Boolean @default(false) // 이메일 인증
+    verificationCode String?
 }
 
 // 프로필 정보를 저장하는 테이블
