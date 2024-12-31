@@ -19,7 +19,9 @@
   "homepage": "https://github.com/leegeunhyeok/node-chat#readme",
   "dependencies": {
     "@prisma/client": "^6.1.0",
+    "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
+
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
@@ -28,6 +30,7 @@
     "prisma": "^6.1.0"
   },
   "devDependencies": {
+
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

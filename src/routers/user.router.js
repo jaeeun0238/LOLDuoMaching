@@ -83,7 +83,7 @@ router.post('/sign-in', async (req, res) => {
   // 입력받은 사용자의 비밀번호와 데이터베이스에 저장된 비밀번호를 비교합니다.
   else if (!(await bcrypt.compare(password, accountData.password)))
     return res.status(401).json({ message: '비밀번호가 일치하지 않습니다.' });
-  console.log('Secret Key:', process.env.SERVER_ACCESS_KEY);
+  console.log('Secret Key:', process.env.JWT_SECRET);
 
   // 비밀번호를 암호화(bcrypt 사용)하여 저장.
   // 로그인에 성공하면, 사용자의 accountId를 바탕으로 토큰을 생성합니다.
@@ -96,10 +96,13 @@ router.post('/sign-in', async (req, res) => {
     // 서버가 비밀 키를 사용하여 토큰 변조 여부를 알 수 있다
     process.env.JWT_SECRET,
     // 엑세스 토큰
-    { expiresIn: '1h' },
+
+    { expiresIn: '1d' },
   );
 
-  res.cookie('userId', `Bearer ${token}`);
+  res.cookie('authorization', `Bearer ${token}`);
+  res.cookie('userId', `${accountData.userId}`);
+
   return res
     .status(200)
     .json({ message: '로그인 성공', email: accountData.email, token });
@@ -120,7 +123,9 @@ router.post('/sign-in', async (req, res) => {
 router.post('/sign-out', (req, res) => {
   try {
     // authorization 쿠키를 삭제하여 로그아웃 처리
+
     res.clearCookie('userId');
+    res.clearCookie('authorization');
     return res.status(200).json({ message: '로그아웃 성공' });
   } catch (error) {
     next(error); // 에러 핸들링 미들웨어로 전달
