@@ -5,9 +5,18 @@ import authMiddleware from '../middlewares/auth.middleware.js';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
 
 dotenv.config();
 const router = express.Router();
+
+const transporter = nodemailer.createTransport({
+  service: process.env.EMAIL_SERVICE, // 이메일 서비스 제공자 (예: gmail, naver)
+  auth: {
+    user: process.env.NODEMAILER_USER, // 발신자 이메일 주소
+    pass: process.env.NODEMAILER_PASS, // 발신자 이메일 비밀번호 또는 앱 비밀번호
+  },
+});
 
 /** 사용자 회원가입 API **/
 // localhost:c/api/sign-up POST
@@ -20,6 +29,26 @@ router.post('/sign-up', async (req, res) => {
     userName,
     nickname,
   });
+  // 랜덤코드뽑기
+  function randomCode() {
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+      //랜덤한 인덱스의 유니코드 단일문자반환
+      code += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return code;
+  }
+  const verificationCode = randomCode();
+
+  const mailOptions = {
+    from: process.env.NODEMAILER_USER,
+    //가입 이메일
+    to: email,
+    subject: '이메일 인증을 완료해주세요',
+    html: `인증 코드는 ${verificationCode} 입니다.`,
+  };
 
   //  - [ ]  **이메일 가입 및 인증 기능**
   //  - 이메일 가입 시 이메일 인증 기능을 포함하는 것이 좋습니다.
@@ -57,6 +86,8 @@ router.post('/sign-up', async (req, res) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  await transporter.sendMail(mailOptions);
+
   // 사용자 정보를 account 테이블에 추가
   const userData = await prisma.users.create({
     data: {
@@ -64,6 +95,8 @@ router.post('/sign-up', async (req, res) => {
       password: hashedPassword,
       userName,
       nickname,
+      emailVerify: false, // 일단 fals로 시작
+      verificationCode: verificationCode,
     },
   });
 
@@ -73,10 +106,46 @@ router.post('/sign-up', async (req, res) => {
   });
 });
 
+router.post('/email-verify', async (req, res, next) => {
+  const { verificationCode, email } = req.body;
+  try {
+    const user = await prisma.users.findUnique({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
+    }
+
+    if (user.emailVerify) {
+      return res.status(400).json({ message: '이미 인증된 이메일입니다.' });
+    }
+
+    if (user.verificationCode !== verificationCode) {
+      return res.status(400).json({ message: '잘못된 인증 코드입니다.' });
+    }
+    await prisma.users.update({
+      where: { email },
+      data: { emailVerify: true, verificationCode: null },
+    });
+    return res.status(200).json({ message: '이메일 인증이 완료되었습니다.' });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post('/sign-in', async (req, res) => {
   // 클라이언트에서 로그인 요청 시 받은  email, password
   const { email, password } = req.body;
   const accountData = await prisma.users.findUnique({ where: { email } });
+
+  const user = await prisma.users.findUnique({
+    where: { email: email },
+  });
+
+  if (!user.emailVerify) {
+    return res
+      .status(401)
+      .json({ message: '이메일 인증이 완료되지 않았습니다.' });
+  }
 
   if (!accountData)
     return res.status(401).json({ message: '존재하지 않는 email입니다.' });

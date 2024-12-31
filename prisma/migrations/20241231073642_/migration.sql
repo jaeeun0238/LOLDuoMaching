@@ -6,6 +6,8 @@ CREATE TABLE `Users` (
     `userName` VARCHAR(191) NOT NULL,
     `nickname` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `emailVerify` BOOLEAN NOT NULL DEFAULT false,
+    `verificationCode` VARCHAR(191) NULL,
 
     UNIQUE INDEX `Users_email_key`(`email`),
     UNIQUE INDEX `Users_nickname_key`(`nickname`),
