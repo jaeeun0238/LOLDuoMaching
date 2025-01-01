@@ -170,3 +170,13 @@ body {
   font-weight: bold;
   color: #e74c3c; /* 좋아요 수 강조 색상 */
 }
+
+#pagination {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+#pagination button {
+  padding: 5px 10px;
+  cursor: pointer;
+}
