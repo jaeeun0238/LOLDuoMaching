@@ -1,0 +1,115 @@
+/* 헤더  */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-center {
+  position: absolute; /* 절대 위치 지정 */
+  left: 10%; /* 부모 요소의 50% 위치 */
+}
+
+.header-left .menu-button {
+  font-size: 16px;
+  padding: 10px 15px;
+  background-color: #e0e0e0;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.header-center {
+  position: absolute; /* 절대 위치 지정 */
+  left: 50%; /* 부모 요소의 50% 위치 */
+  transform: translateX(-50%); /* 요소의 폭의 절반만큼 왼쪽으로 이동 */
+}
+.header-center h1 {
+  font-size: 35px;
+  margin: 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  margin: 0 10px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.search-bar input {
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.search-bar button {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  background-color: #e0e0e0;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+/* 탭 스타일 */
+.tabs {
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
+}
+
+.tabs ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tabs li {
+  margin: 0 50px 0 50px;
+}
+
+.tabs a {
+  display: block;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #333;
+  border-right: 1px solid #ccc;
+}
+
+.tabs a:last-child {
+  border-right: none;
+}
+
+.tabs a:hover {
+  background-color: #ddd;
+}

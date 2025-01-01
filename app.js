@@ -7,7 +7,6 @@ import setProfile from './src/routers/profile.router.js';
 import postRouter from './src/routers/posts.router.js';
 import duoReviewRouter from './src/routers/duoreview.router.js';
 import commentRouter from './src/routers/comments.router.js';
-import imageMapping from './src/routers/image.router.js';
 
 import http from 'http'; // Node.js 기본 내장 모듈
 import fs from 'fs/promises'; // 파일 시스템 모듈로, Promise 기반으로 파일을 읽고 쓸 수 있게 해줌
@@ -34,7 +33,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api', [
-  imageMapping,
   userRouter,
   getInfo,
   setProfile,
@@ -80,8 +78,6 @@ app.get('/signup', async (req, res) => {
 
 // 다른 유저페이지
 app.get('/userProfile/:userId', async (req, res) => {
-  const { userId } = req.params; // URL 파라미터에서 userId 추출
-
   try {
     const data = await fs.readFile('./static/userProfile/userProfile.html');
     res.writeHead(200, { 'Content-Type': 'text/html' });
@@ -96,6 +92,27 @@ app.get('/userProfile/:userId', async (req, res) => {
 app.get('/setProfile', async (req, res) => {
   try {
     const data = await fs.readFile('./static/setProfile/setProfile.html'); // 마이페이지 HTML 파일 경로
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.end(data);
+  } catch (err) {
+    res.send('에러');
+  }
+});
+
+// 글 생성
+app.get('/createPost', async (req, res) => {
+  try {
+    const data = await fs.readFile('./static/createPost/createPost.html'); // 글 생성 HTML 파일 경로
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.end(data);
+  } catch (err) {
+    res.send('에러');
+  }
+});
+
+app.get('/newsFeed', async (req, res) => {
+  try {
+    const data = await fs.readFile('./static/newsFeed/newsFeed.html'); // 글 생성 HTML 파일 경로
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.end(data);
   } catch (err) {
