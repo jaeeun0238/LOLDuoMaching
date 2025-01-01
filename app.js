@@ -173,7 +173,7 @@ io.on('connection', (socket) => {
   });
 });
 
-// 서버를 8080 포트로 listen
-server.listen(8080, () => {
+// 서버를 3000 포트로 listen
+server.listen(3000, () => {
   console.log('서버 실행 중..');
 });
