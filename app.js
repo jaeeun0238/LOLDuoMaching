@@ -120,6 +120,16 @@ app.get('/newsFeed', async (req, res) => {
   }
 });
 
+app.get('/post/select/:postId', async (req, res) => {
+  try {
+    const data = await fs.readFile('./static/getPost/getpost.html'); // 글 생성 HTML 파일 경로
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.end(data);
+  } catch (err) {
+    res.send('에러');
+  }
+});
+
 // 클라이언트가 서버에 접속될 때(connection) 실행 >> io.on('connection', callback)
 io.on('connection', (socket) => {
   // 클라이언트로부터 특정 이벤트 발생 시 실행 >> socket.on(event, callback)
