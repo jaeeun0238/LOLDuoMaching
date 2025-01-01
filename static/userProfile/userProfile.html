@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>채팅</title>
+  <link rel="stylesheet" href="/static/userProfile/userProfile.css">
+  <script src="../socket.io/socket.io.js"></script>
+
+  <script src="/static/userProfile/userProfile.js"></script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="/"><img src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/e7db6664499143.5f749c02d235f.gif"
+          alt="로고" style="width: 100px; height: 100px;"></a>
+    </div>
+    <div class="header-center">
+
+      <h1>롤 듀오 찾기</h1>
+    </div>
+    <div class="header-right">
+      <nav>
+        <ul class="nav-links">
+          <li><a href="/login">로그인</a></li>
+          <li><a href="/signup">회원가입</a></li>
+          <li><a href="/setProfile">프로필 설정</a></li>
+          <li><a href="#" id="logoutButton">로그아웃</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <nav class="tabs">
+    <ul>
+      <li><a href="/newsFeed">게시판</a></li>
+      <li><a href="/createPost">글 쓰기</a></li>
+      <li><a href="#section4">도움말</a></li>
+    </ul>
+  </nav>
+  <div id="container">
+    <div id="main1">
+      <div id="profile"></div>
+      <button id="enterChat">채팅에 들어가기</button>
+    </div>
+    <div id="main2">
+      <div id="chat">
+        <!-- 채팅 메시지 영역 -->
+      </div>
+      <div>
+        <input type="text" id="test" placeholder="메시지를 입력해주세요..">
+        <button onclick="send()">전송</button>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+
+    <div id="review">
+      <div class="review-list">
+        <!-- 여기에 후기가 추가될 것입니다. -->
+        <div class="review-item">
+        </div>
+        <!-- 추가적인 후기는 여기에 동적으로 삽입됩니다. -->
+      </div>
+
+
+
+
+      <div id="write-box">
+        <textarea id="comment" placeholder="댓글 입력"></textarea>
+
+        <select id="rating">
+          <option value="★">★</option>
+          <option value="★★">★★</option>
+          <option value="★★★">★★★</option>
+          <option value="★★★★">★★★★</option>
+          <option value="★★★★★">★★★★★</option>
+        </select>
+
+        <button id="reviewEnter" type="submit">후기 남기기</button>
+      </div>
+
+    </div>
+
+
+  </div>
+</body>
+
+</html>
