@@ -31,7 +31,6 @@ app.use(cookieParser());
 app.use(cors()); // CORS 미들웨어 추가 >>  다른 도메인에서의 요청을 허용
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use('/api', [
   userRouter,
   getInfo,
@@ -120,16 +119,6 @@ app.get('/newsFeed', async (req, res) => {
   }
 });
 
-app.get('/post/select/:postId', async (req, res) => {
-  try {
-    const data = await fs.readFile('./static/getPost/getpost.html'); // 글 생성 HTML 파일 경로
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end(data);
-  } catch (err) {
-    res.send('에러');
-  }
-});
-
 // 클라이언트가 서버에 접속될 때(connection) 실행 >> io.on('connection', callback)
 io.on('connection', (socket) => {
   // 클라이언트로부터 특정 이벤트 발생 시 실행 >> socket.on(event, callback)
@@ -173,7 +162,7 @@ io.on('connection', (socket) => {
   });
 });
 
-// 서버를 8080 포트로 listen
-server.listen(8080, () => {
+// 서버를 3000 포트로 listen
+server.listen(3000, () => {
   console.log('서버 실행 중..');
 });
