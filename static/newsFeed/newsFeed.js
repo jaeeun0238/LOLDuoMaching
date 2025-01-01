@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // 클릭 이벤트 추가
       postElement.onclick = () => {
-        window.location.href = `http://localhost:8080/post/${post.postId}`; // postId를 URL에 포함
+        window.location.href = `http://localhost:3000/api/posts/select/${post.postId}`; // postId를 URL에 포함
       };
 
       postElement.innerHTML = `

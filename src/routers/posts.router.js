@@ -46,20 +46,6 @@ router.get('/posts/select/:postId', async (req, res, next) => {
   try {
     const post = await prisma.posts.findUnique({
       where: { postId: parseInt(postId, 10) }, // ID로 게시글 검색
-      include: {
-        profile: {
-          select: {
-            lolNickname: true,
-            tier: true,
-            line: true,
-            user: {
-              select: {
-                nickname: true, // 닉네임 포함
-              },
-            },
-          },
-        },
-      },
       select: {
         title: true,
         postImage: true,
@@ -67,6 +53,19 @@ router.get('/posts/select/:postId', async (req, res, next) => {
         content: true,
         createdAt: true,
         updatedAt: true,
+        profile: {
+          select: {
+            lolNickname: true,
+            tier: true,
+            line: true,
+
+            user: {
+              select: {
+                nickname: true, // 닉네임 포함
+              },
+            },
+          },
+        },
       },
     });
     if (!post) {
