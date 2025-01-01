@@ -1,0 +1,182 @@
+/* 헤더  */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-center {
+  position: absolute; /* 절대 위치 지정 */
+  left: 10%; /* 부모 요소의 50% 위치 */
+}
+
+.header-left .menu-button {
+  font-size: 16px;
+  padding: 10px 15px;
+  background-color: #e0e0e0;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.header-center {
+  position: absolute; /* 절대 위치 지정 */
+  left: 50%; /* 부모 요소의 50% 위치 */
+  transform: translateX(-50%); /* 요소의 폭의 절반만큼 왼쪽으로 이동 */
+}
+.header-center h1 {
+  font-size: 35px;
+  margin: 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  margin: 0 10px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.search-bar input {
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.search-bar button {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  background-color: #e0e0e0;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+/* 탭 스타일 */
+.tabs {
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
+}
+
+.tabs ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tabs li {
+  margin: 0 50px 0 50px;
+}
+
+.tabs a {
+  display: block;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #333;
+  border-right: 1px solid #ccc;
+}
+
+.tabs a:last-child {
+  border-right: none;
+}
+
+.tabs a:hover {
+  background-color: #ddd;
+}
+
+#postsContainer {
+  display: flex; /* Flexbox 사용 */
+  flex-direction: column; /* 세로 방향으로 정렬 */
+  align-items: center; /* 수평 가운데 정렬 */
+  max-width: 800px; /* 최대 너비 설정 */
+  margin: 0 auto; /* 수평 가운데 정렬 */
+}
+
+.post {
+  display: flex; /* Flexbox 사용 */
+  align-items: center; /* 수직 정렬 */
+  justify-content: space-between; /* 요소 간의 간격을 균등하게 배치 */
+  background: white;
+  height: 130px;
+  width: 800px;
+  border-radius: 8px;
+  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  padding: 15px;
+}
+
+.post h3 {
+  margin: 0 30px 0 30px;
+  font-size: 1.5em;
+  color: #333;
+}
+
+.post p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.post img {
+  width: 100px; /* 이미지 너비를 100px로 설정 */
+  height: 100px; /* 이미지 높이를 100px로 설정 */
+  object-fit: cover; /* 이미지 비율을 유지하면서 주어진 공간에 맞게 잘라냄 */
+  margin-right: 10px; /* 이미지와 제목 간의 간격 */
+}
+
+.post-title {
+  flex-grow: 1; /* 제목이 가능한 공간을 차지하도록 설정 */
+  margin: 0; /* 기본 마진 제거 */
+}
+
+.like-count {
+  margin-left: 10px; /* 제목과 좋아요 수 간의 간격 */
+}
+.post .post-meta {
+  font-size: 0.9em;
+  color: #999;
+}
+
+.post .like-count {
+  font-weight: bold;
+  color: #e74c3c; /* 좋아요 수 강조 색상 */
+}
+
+#pagination {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+#pagination button {
+  padding: 5px 10px;
+  cursor: pointer;
+}

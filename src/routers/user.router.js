@@ -171,6 +171,7 @@ router.post('/sign-in', async (req, res) => {
 
   res.cookie('authorization', `Bearer ${token}`);
   res.cookie('userId', `${accountData.userId}`);
+  res.cookie('nickname', `${accountData.nickname}`);
 
   return res
     .status(200)

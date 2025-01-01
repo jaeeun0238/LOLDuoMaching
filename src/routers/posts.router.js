@@ -5,22 +5,28 @@ import authMiddleware from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
-// 게시글 생성
 router.post('/posts', authMiddleware, async (req, res, next) => {
   try {
-    const { title, likeCount, content } = req.body;
-    console.log(req.user);
-    const profileId = req.user.userId; // 인증된 사용자 profileId
-    // profileId가 누락된 경우 오류 처리
-    if (!profileId) {
-      return res.status(400).json({ message: 'profileId가 필요합니다.' });
+    const { title, content, imageUrl } = req.body;
+    const userId = req.user;
+
+    // userId로 profileId 조회
+    const profile = await prisma.profiles.findFirst({
+      where: { userId: userId.id }, // userId가 객체가 아니라 단일 값이어야 함
+    });
+
+    // profile이 없을 경우 오류 처리
+    if (!profile) {
+      return res.status(404).json({ message: '프로필이 존재하지 않습니다.' });
     }
+    const profileId = profile.profileId; // profileId를 가져옴
 
     const post = await prisma.posts.create({
       data: {
         title,
-        likeCount: likeCount ?? 0, // likeCount가 undefined일 경우 기본값 0으로 설정
+        likeCount: 0, // likeCount가 undefined일 경우 기본값 0으로 설정
         content,
+        postImage: imageUrl,
         profileId,
       },
     });
@@ -34,23 +40,48 @@ router.post('/posts', authMiddleware, async (req, res, next) => {
 });
 
 // 게시글 전체 조회
-router.get('/posts', async (req, res, next) => {
-  try {
-    const posts = await prisma.posts.findMany({
-      include: {
-        profile: true, // 프로필 정보도 포함하여 게시글과 연결된 프로필 정보도 조회
-      },
-      orderBy: {
-        createdAt: 'desc', // 게시글 생성일 기준 내림차순 정렬
-      },
-    });
+router.get('/getPosts', async (req, res, next) => {
+  // try {
+  //   const { userId, nickname } = req.user;
 
-    return res
-      .status(200)
-      .json({ message: '게시글이 전체 조회되었습니다.', data: posts });
-  } catch (error) {
-    next(error); // 에러를 다음 핸들러로 전달
-  }
+  //   const profile = await prisma.profiles.findFirst({
+  //     where: { userId: userId },
+  //   });
+
+  //   // const profileId = profile.profileId;
+
+  //   // const lolNickname = profile.lolNickname; // lolNickname 가져옴
+
+  //   const posts = await prisma.posts.findMany({
+  //     include: {
+  //       profile: true, // 프로필 정보도 포함하여 게시글과 연결된 프로필 정보도 조회
+  //     },
+  //     orderBy: {
+  //       createdAt: 'desc', // 게시글 생성일 기준 내림차순 정렬
+  //     },
+  //   });
+
+  //   return res.status(200).json({
+  //     message: '게시글이 전체 조회되었습니다.',
+  //     data: posts,
+  //     nickname,
+  //   });
+  // } catch (error) {
+  //   next(error); // 에러를 다음 핸들러로 전달
+  // }
+  const posts = await prisma.posts.findMany({
+    select: {
+      postId: true,
+      postImage: true,
+      title: true,
+      likeCount: true,
+      content: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  return res.status(200).json({ data: posts });
 });
 
 // 게시글 수정

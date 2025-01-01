@@ -1,5 +1,12 @@
 const socket = io();
 
+// 쿠키에서 특정 키의 값을 가져오는 함수
+function getCookieValue(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   // 현재 URL에서 사용자 ID 추출
   const userId = window.location.pathname.split('/').pop(); // URL의 마지막 부분을 가져옴
@@ -11,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       throw new Error('프로필 정보를 불러올 수 없습니다.');
     }
 
-    const profile = await response.json();
+    profile = await response.json();
 
     // 프로필 정보 렌더링
     const profileContainer = document.getElementById('profile');
@@ -30,10 +37,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   /* 채팅에 들어가기 버튼 클릭 시 실행 */
   document.getElementById('enterChat').addEventListener('click', () => {
-    const name = profile?.lolNickname || '익명'; // 프로필 데이터의 닉네임 사용
+    // 쿠키에서 닉네임 가져오기
+    const nickname = getCookieValue('nickname') || '익명'; // 닉네임이 없으면 '익명'으로 설정
 
     // 서버에 새로운 유저가 왔다고 알림
-    socket.emit('newUser', name);
+    socket.emit('newUser', nickname);
   });
 
   /* 서버로부터 데이터 받은 경우 */
@@ -118,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('reviewEnter').addEventListener('click', () => {
     const comment = document.getElementById('comment').value.trim(); // 댓글 내용
     const rating = document.getElementById('rating').value; // 별점
-
+    const nickname = getCookieValue('nickname') || '익명'; // 닉네임이 없으면 '익명'으로 설정
     // 입력값 검증
     if (!comment) {
       alert('댓글을 입력해주세요!');
@@ -127,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 리뷰 데이터를 서버로 보내거나 클라이언트에서 처리
     const reviewData = {
-      nickname: '사용자: ', // 추후 로그인 시스템으로 사용자 닉네임 연동
+      nickname: nickname, // 추후 로그인 시스템으로 사용자 닉네임 연동
       comment: comment,
       rating: rating,
     };

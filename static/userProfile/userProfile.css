@@ -134,7 +134,7 @@ body {
   flex-direction: column; /* 세로 방향으로 정렬 */
   justify-content: center; /* 세로 중앙 정렬 */
   align-items: center; /* 가로 중앙 정렬 */
-  margin: 50px auto 20px auto;
+  margin: 50px 10px 20px auto;
   margin-top: 100px;
   padding: 14px;
   border-radius: 20px;
@@ -145,7 +145,7 @@ body {
 }
 
 #main2 {
-  margin: 50px auto 20px auto;
+  margin: 50px auto 20px 10px;
   margin-top: 100px;
   padding: 14px;
   border-radius: 20px;
@@ -204,7 +204,7 @@ body {
   border-radius: 20px;
   padding: 14px;
   background-color: lightblue;
-  width: 1320px;
+  width: 940px;
   height: 300px;
   position: relative;
 }
