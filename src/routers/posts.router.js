@@ -84,6 +84,56 @@ router.get('/getPosts', async (req, res, next) => {
   return res.status(200).json({ data: posts });
 });
 
+router.get('/post/select/:postId', async (req, res, next) => {
+  const { postId } = req.params; // 조회할 게시글의 ID
+  try {
+    const post = await prisma.posts.findUnique({
+      where: { postId: parseInt(postId, 10) }, // ID로 게시글 검색
+      include: {
+        profile: {
+          select: {
+            lolNickname: true,
+            tier: true,
+            line: true,
+            user: {
+              select: {
+                nickname: true, // 닉네임 포함
+              },
+            },
+          },
+        },
+      },
+      select: {
+        title: true,
+        postImage: true,
+        likeCount: true,
+        content: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    if (!post) {
+      return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
+    }
+    // 결과 데이터에 닉네임 추가
+    const result = {
+      nickname: post.profile.user.nickname,
+      title: post.title,
+      postImage: post.postImage,
+      likeCount: post.likeCount,
+      content: post.content,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+    };
+    return res
+      .status(200)
+      .json({ message: '게시글이 조회되었습니다.', data: result });
+  } catch (error) {
+    console.error('게시글 조회 오류:', error);
+    next(error); // 에러를 다음 핸들러로 전달
+  }
+});
+
 // 게시글 수정
 router.patch('/posts/:postId', authMiddleware, async (req, res, next) => {
   try {
