@@ -95,7 +95,7 @@ router.post('/sign-up', async (req, res) => {
       password: hashedPassword,
       userName,
       nickname,
-      emailVerify: false, // 일단 fals로 시작
+      emailVerify: false, // 일단 false로 시작
       verificationCode: verificationCode,
     },
   });
@@ -171,7 +171,6 @@ router.post('/sign-in', async (req, res) => {
 
   res.cookie('authorization', `Bearer ${token}`);
   res.cookie('userId', `${accountData.userId}`);
-  res.cookie('nickname', `${accountData.nickname}`);
 
   return res
     .status(200)
