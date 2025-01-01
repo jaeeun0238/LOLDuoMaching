@@ -31,15 +31,6 @@ app.use(cookieParser());
 app.use(cors()); // CORS 미들웨어 추가 >>  다른 도메인에서의 요청을 허용
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// 모든 요청을 로깅하는 미들웨어 (기존 라우트들 위에 추가)
-app.use((req, res, next) => {
-  console.log('Request URL:', decodeURIComponent(req.url));
-  console.log('Request method:', req.method);
-  next();
-});
-
-// API 라우트들을 먼저 정의
 app.use('/api', [
   userRouter,
   getInfo,
