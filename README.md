@@ -34,6 +34,13 @@ $ npm i express
 ## 4. 와이어 프레임
 
 ![와이어프레임](<https://github.com/jaeeun0238/LOLDuoMaching/blob/main/image/image%20(1).png>)
+(https://github.com/jaeeun0238/LOLDuoMaching/blob/main/image/image%20(2).png)
+(https://github.com/jaeeun0238/LOLDuoMaching/blob/main/image/image%20(3).png)
+(https://github.com/jaeeun0238/LOLDuoMaching/blob/main/image/image%20(4).png)
+(https://github.com/jaeeun0238/LOLDuoMaching/blob/main/image/image%20(5).png)
+(https://github.com/jaeeun0238/LOLDuoMaching/blob/main/image/image%20(6).png)
+(https://github.com/jaeeun0238/LOLDuoMaching/blob/main/image/image%20(7).png)
+(https://github.com/jaeeun0238/LOLDuoMaching/blob/main/image/image%20(8).png)
 
 ## ERD DIAGRAM
 
