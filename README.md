@@ -29,7 +29,7 @@ $ npm i express
 
 ## 3. 프로그래머 정보
 
-![@유재은](https://github.com/jaeeun0238) ![@강나연](https://github.com/nayeon0206) ![@유대원](https://github.com/Rlhaa) ![@윤예원](https://github.com/BlueStrobus) ![@김동환](https://github.com/KimDongHwan97)
+[@유재은](https://github.com/jaeeun0238) [@강나연](https://github.com/nayeon0206) [@유대원](https://github.com/Rlhaa) [@윤예원](https://github.com/BlueStrobus) [@김동환](https://github.com/KimDongHwan97)
 
 ## 4. 와이어 프레임
 
@@ -42,61 +42,62 @@ $ npm i express
 ## 5. 디텍토리 구조
 
 LOLDuoMatching
-├─ app.js
-├─ prisma
-│ ├─ migrations
-│ └─ schema.prisma
-├─ src
-│ ├─ middlewares
-│ │ ├─ auth.middleware.js
-│ │ └─ error.middleware.js
-│ ├─ routers
-│ │ ├─ comments.router.js
-│ │ ├─ duoreview.router.js
-│ │ ├─ getLolInfo.router.js
-│ │ ├─ posts.router.js
-│ │ ├─ profile.router.js
-│ │ └─ user.router.js
-│ └─ uts
-│ └─ prisma
-│ └─ index.js
-└─ static
-├─ createPost
-│ ├─ createPost.css
-│ ├─ createPost.html
-│ └─ createPost.js
-├─ getPost
-│ ├─ css
-│ │ ├─ championSemple
-│ │ ├─ lolL.png
-│ │ ├─ stars
-│ │ └─ styles.css
-│ ├─ getPost.html
-│ ├─ getPost.js
-│ └─ script.js
-├─ home
-│ ├─ home.css
-│ ├─ home.html
-│ └─ home.js
-├─ login
-│ ├─ login.css
-│ ├─ login.html
-│ └─ login.js
-├─ newsFeed
-│ ├─ newsFeed.css
-│ ├─ newsFeed.html
-│ └─ newsFeed.js
-├─ setProfile
-│ ├─ setProfile.css
-│ ├─ setProfile.html
-│ └─ setProfile.js
-├─ signup
-│ ├─ signup.css
-│ ├─ signup.html
-│ └─ signup.js
-├─ userProfile
-│ ├─ userProfile.css
-│ ├─ userProfile.html
-│ └─ userProfile.js
-├─ package.json
+
+├─ app.js  
+├─ prisma  
+│ ├─ migrations  
+│ └─ schema.prisma  
+├─ src  
+│ ├─ middlewares  
+│ │ ├─ auth.middleware.js  
+│ │ └─ error.middleware.js  
+│ ├─ routers  
+│ │ ├─ comments.router.js  
+│ │ ├─ duoreview.router.js  
+│ │ ├─ getLolInfo.router.js  
+│ │ ├─ posts.router.js  
+│ │ ├─ profile.router.js  
+│ │ └─ user.router.js  
+│ └─ uts  
+│ └─ prisma  
+│ └─ index.js  
+└─ static  
+├─ createPost  
+│ ├─ createPost.css  
+│ ├─ createPost.html  
+│ └─ createPost.js  
+├─ getPost  
+│ ├─ css  
+│ │ ├─ championSemple  
+│ │ ├─ lolL.png  
+│ │ ├─ stars  
+│ │ └─ styles.css  
+│ ├─ getPost.html  
+│ ├─ getPost.js  
+│ └─ script.js  
+├─ home  
+│ ├─ home.css  
+│ ├─ home.html  
+│ └─ home.js  
+├─ login  
+│ ├─ login.css  
+│ ├─ login.html  
+│ └─ login.js  
+├─ newsFeed  
+│ ├─ newsFeed.css  
+│ ├─ newsFeed.html  
+│ └─ newsFeed.js  
+├─ setProfile  
+│ ├─ setProfile.css  
+│ ├─ setProfile.html  
+│ └─ setProfile.js  
+├─ signup  
+│ ├─ signup.css  
+│ ├─ signup.html  
+│ └─ signup.js  
+├─ userProfile  
+│ ├─ userProfile.css  
+│ ├─ userProfile.html  
+│ └─ userProfile.js  
+├─ package.json  
 └─ package-lock.json
