@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소환사 정보 조회</title>
+    <link rel="stylesheet" href="/static/setProfile/setProfile.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-left">
+            <a href="/"><img
+                    src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/e7db6664499143.5f749c02d235f.gif"
+                    alt="로고" style="width: 100px; height: 100px;"></a>
+        </div>
+        <div class="header-center">
+
+            <h1>롤 듀오 찾기</h1>
+        </div>
+        <div class="header-right">
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/login">로그인</a></li>
+                    <li><a href="/signup">회원가입</a></li>
+                    <li><a href="/setProfile">프로필 설정</a></li>
+                    <li><a href="#" id="logoutButton">로그아웃</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <nav class="tabs">
+        <ul>
+            <li><a href="/newsFeed">게시판</a></li>
+            <li><a href="/createPost">글 쓰기</a></li>
+            <li><a href="#section4">도움말</a></li>
+        </ul>
+    </nav>
+
+    <!-- 조회 폼 -->
+    <div class="signup-container">
+        <h2>소환사 정보 입력</h2>
+        <div class="input-group">
+            <label for="gameName">소환사 이름:</label>
+            <input type="text" id="gameName" placeholder="닉네임을 입력하세요">
+        </div>
+        <div class="input-group">
+            <label for="tagLine">태그:</label>
+            <input type="text" id="tagLine" placeholder="태그를 입력하세요 (예: KR1)">
+        </div>
+        <button id="searchButton">조회하기</button>
+        <p id="errorMessage" style="color: red; margin-top: 10px;"></p>
+    </div>
+
+    <!-- 결과 출력 -->
+    <div class="signup-container" id="resultContainer" style="display: none;">
+        <h2>조회 결과</h2>
+        <div id="summonerInfo"></div>
+    </div>
+    <div class="profile-settings">
+        <h2>프로필 설정</h2>
+        <form id="profileForm">
+            <label for="line">라인:</label>
+            <input type="text" id="line" name="line" required />
+
+            <label for="tier">티어:</label>
+            <input type="text" id="tier" name="tier" required />
+
+            <label for="mostChampions">모스트 챔피언:</label>
+            <input type="text" id="mostChampion1" name="mostChampion1" placeholder="챔피언 1" required />
+            <input type="text" id="mostChampion2" name="mostChampion2" placeholder="챔피언 2" required />
+            <input type="text" id="mostChampion3" name="mostChampion3" placeholder="챔피언 3" required />
+
+            <button type="submit">프로필 저장</button>
+        </form>
+    </div>
+
+    <script src="/static/setProfile/setProfile.js"></script>
+</body>
+
+</html>

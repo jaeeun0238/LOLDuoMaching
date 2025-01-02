@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/login/login.css">
+    <title>로그인 페이지</title>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-left">
+            <a href="/"><img
+                    src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/e7db6664499143.5f749c02d235f.gif"
+                    alt="로고" style="width: 100px; height: 100px;"></a>
+        </div>
+        <div class="header-center">
+
+            <h1>롤 듀오 찾기</h1>
+        </div>
+        <div class="header-right">
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/login">로그인</a></li>
+                    <li><a href="/signup">회원가입</a></li>
+                    <li><a href="/setProfile">프로필 설정</a></li>
+                    <li><a href="#" id="logoutButton">로그아웃</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <nav class="tabs">
+        <ul>
+            <li><a href="/newsFeed">게시판</a></li>
+            <li><a href="/createPost">글 쓰기</a></li>
+            <li><a href="#section4">도움말</a></li>
+        </ul>
+    </nav>
+    <div class="login-container">
+        <h2>로그인</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="email">이메일</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit">로그인</button>
+            <div class="error-message" id="errorMessage"></div>
+
+        </form>
+        <p id="message"></p>
+    </div>
+    <script src="/static/login/login.js"></script>
+</body>
+
+</html>

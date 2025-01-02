@@ -1,0 +1,151 @@
+/* 기본 스타일 */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+
+/* 헤더 스타일 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.header-center h1 {
+  font-size: 35px;
+  margin: 0;
+}
+
+.header-left .menu-button {
+  font-size: 16px;
+  padding: 10px 15px;
+  background-color: #e0e0e0;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  margin: 0 10px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+}
+
+.signup-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: lightblue;
+  width: 400px;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+}
+
+.input-group {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+#signupMessage {
+  margin-top: 10px;
+  color: red;
+}
+
+#summonerInfo img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-top: 10px;
+}
+
+#summonerInfo p {
+  margin: 10px 0;
+}
+/* 탭 스타일 */
+.tabs {
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
+}
+
+.tabs ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tabs li {
+  margin: 0 50px 0 50px;
+}
+
+.tabs a {
+  display: block;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #333;
+  border-right: 1px solid #ccc;
+}
+
+.tabs a:last-child {
+  border-right: none;
+}
+
+.tabs a:hover {
+  background-color: #ddd;
+}
