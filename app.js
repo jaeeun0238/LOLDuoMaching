@@ -32,6 +32,14 @@ app.use(cors()); // CORS 미들웨어 추가 >>  다른 도메인에서의 요�
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// 모든 요청을 로깅하는 미들웨어 (기존 라우트들 위에 추가)
+app.use((req, res, next) => {
+  console.log('Request URL:', decodeURIComponent(req.url));
+  console.log('Request method:', req.method);
+  next();
+});
+
+// API 라우트들을 먼저 정의
 app.use('/api', [
   userRouter,
   getInfo,
@@ -40,7 +48,21 @@ app.use('/api', [
   duoReviewRouter,
   commentRouter,
 ]);
-app.use('/static', express.static('static')); // static 폴더 내의 정적 파일을 제공
+
+// 정적 파일 제공
+app.use('/static', express.static('static'));
+
+// HTML 페이지 라우트는 API 라우트 이후에
+app.get('/post/select/:postId', async (req, res) => {
+  // 이 경로 확인
+  try {
+    const data = await fs.readFile('./static/getPost/getpost.html');
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.end(data);
+  } catch (err) {
+    res.status(500).send('파일을 로드할 수 없습니다.');
+  }
+});
 
 // 각 경로에 대한 get 요청 처리, HTML 파일을 비동기적으로 읽어 클라이언트에 응답
 // 기본 경로
@@ -120,16 +142,6 @@ app.get('/newsFeed', async (req, res) => {
   }
 });
 app.get('/posts/select/:postId', async (req, res) => {
-  try {
-    const data = await fs.readFile('./static/getPost/getpost.html'); // 글 생성 HTML 파일 경로
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end(data);
-  } catch (err) {
-    res.send('에러');
-  }
-});
-
-app.get('/post/select/:postId', async (req, res) => {
   try {
     const data = await fs.readFile('./static/getPost/getpost.html'); // 글 생성 HTML 파일 경로
     res.writeHead(200, { 'Content-Type': 'text/html' });

@@ -42,18 +42,22 @@ router.post('/posts', authMiddleware, async (req, res, next) => {
 // 게시글 조회
 // 뎃글 조회, 체팅 기능 추가하기
 router.get('/posts/select/:postId', async (req, res, next) => {
-  const { postId } = req.params; // 조회할 게시글의 ID
+  const { postId } = req.params;
   try {
     const post = await prisma.posts.findUnique({
-      where: { postId: parseInt(postId, 10) }, // ID로 게시글 검색
+      where: {
+        postId: parseInt(postId, 10),
+      },
       select: {
+        // include 대신 select 사용
         title: true,
+        content: true,
         postImage: true,
         likeCount: true,
-        content: true,
         createdAt: true,
         updatedAt: true,
         profile: {
+          // 중첩된 select로 필요한 관계 데이터 선택
           select: {
             lolNickname: true,
             tier: true,
@@ -61,33 +65,30 @@ router.get('/posts/select/:postId', async (req, res, next) => {
 
             user: {
               select: {
-                nickname: true, // 닉네임 포함
+                nickname: true,
               },
             },
           },
         },
       },
     });
+
     if (!post) {
-      return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
+      return res.status(404).json({
+        message: '게시글을 찾을 수 없습니다.',
+      });
     }
-    // 결과 데이터에 닉네임 추가
-    const result = {
-      nickname: post.profile.user.nickname,
-      title: post.title,
-      postImage: post.postImage,
-      likeCount: post.likeCount,
-      content: post.content,
-      createdAt: post.createdAt,
-      updatedAt: post.updatedAt,
-    };
-    const coments = [];
-    return res
-      .status(200)
-      .json({ message: '게시글이 조회되었습니다.', data: result });
+
+    return res.status(200).json({
+      message: '게시글이 성공적으로 조회되었습니다.',
+      data: post,
+    });
   } catch (error) {
-    console.error('게시글 조회 오류:', error);
-    next(error); // 에러를 다음 핸들러로 전달
+    console.error('게시글 조회 중 오류 발생:', error);
+    return res.status(500).json({
+      message: '게시글 조회 중 오류가 발생했습니다.',
+      error: error.message,
+    });
   }
 });
 

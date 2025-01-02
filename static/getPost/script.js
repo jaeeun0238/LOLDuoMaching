@@ -1,36 +1,70 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  const postId = window.location.pathname.split('/').pop(); // URL에서 postId 추출
-
   try {
-    // 게시글 데이터 조회
-    const response = await fetch(`/post/select/${postId}`);
-    if (!response.ok) {
-      throw new Error('게시글을 불러오는 데 실패했습니다.');
+    // URL에서 postId만 안전하게 추출
+    const pathSegments = window.location.pathname.split('/');
+    const postId = pathSegments[pathSegments.length - 1];
+
+    // postId가 숫자인지 확인
+    if (!postId || isNaN(postId)) {
+      throw new Error('올바르지 않은 게시글 ID입니다.');
     }
 
-    const { data } = await response.json(); // API 응답에서 데이터 추출
+    const apiUrl = `/api/posts/select/${postId}`;
+    console.log('Requesting URL:', apiUrl); // 디버깅용
 
-    // 데이터 반영
-    document.getElementById('title').textContent = data.title;
-    document.getElementById('nickname').textContent = data.nickname;
-    document.getElementById('likeCount').textContent = data.likeCount;
-    document.getElementById('createdAt').textContent = new Date(
-      data.createdAt,
-    ).toLocaleDateString();
-    document.getElementById('updatedAt').textContent = new Date(
-      data.updatedAt,
-    ).toLocaleDateString();
-    document.getElementById('postImage').src = data.postImage;
-    document.getElementById('content').textContent = data.content;
+    const response = await fetch(apiUrl);
+    console.log('Response status:', response.status);
 
-    // 프로필 데이터 반영
-    const profileData = data.profile; // profileData를 올바르게 참조
-    document.getElementById('lolNickname').textContent =
-      profileData.lolNickname;
-    document.getElementById('tier').textContent = profileData.tier;
-    document.getElementById('line').textContent = profileData.line;
+    if (!response.ok) {
+      throw new Error('게시글을 불러오는데 실패했습니다.');
+    }
+
+    const result = await response.json();
+
+    if (!result.data) {
+      throw new Error('게시글 데이터가 없습니다.');
+    }
+
+    const post = result.data;
+
+    // 데이터 표시
+    if (document.getElementById('title'))
+      document.getElementById('title').textContent = post.title;
+    if (document.getElementById('content'))
+      document.getElementById('content').textContent = post.content;
+    if (document.getElementById('postImage') && post.postImage) {
+      document.getElementById('postImage').src = post.postImage;
+    }
+    if (document.getElementById('likeCount'))
+      document.getElementById('likeCount').textContent = post.likeCount;
+    if (document.getElementById('createdAt')) {
+      document.getElementById('createdAt').textContent = new Date(
+        post.createdAt,
+      ).toLocaleString();
+    }
+
+    // 프로필 정보 표시
+    if (post.profile) {
+      if (document.getElementById('nickname')) {
+        document.getElementById('nickname').textContent =
+          post.profile.user.nickname;
+      }
+      if (document.getElementById('lolNickname')) {
+        document.getElementById('lolNickname').textContent =
+          post.profile.lolNickname;
+      }
+      if (document.getElementById('tier')) {
+        document.getElementById('tier').textContent = post.profile.tier;
+      }
+      if (document.getElementById('line')) {
+        document.getElementById('line').textContent = post.profile.line;
+      }
+    }
   } catch (error) {
-    console.error('데이터를 불러오는 중 오류 발생:', error);
-    alert('데이터를 불러올 수 없습니다. 다시 시도해주세요.');
+    console.error('상세 에러 정보:', error);
+    const errorElement = document.createElement('div');
+    errorElement.className = 'error-message';
+    errorElement.textContent = error.message;
+    document.body.insertBefore(errorElement, document.body.firstChild);
   }
 });
